@@ -1,3 +1,4 @@
+# from django.utils import timezone
 from django.db import models
 
 
@@ -11,23 +12,25 @@ class Label(models.Model):
 
 
 class Like(models.Model):
-    like_text = models.CharField(max_length=10, verbose_name='like text')
-    like_count = models.IntegerField(verbose_name='like count')
+    like_text = models.CharField(max_length=10, verbose_name='like text', name='')
+    like_count = models.IntegerField(verbose_name='like count', name='')
+    # like_date = models.DateField(verbose_name='like date', name='', default=timezone.now())
 
 
 class Comment(models.Model):
     like = models.ForeignKey(Like, on_delete=models.CASCADE)
-    comment_text = models.TextField(verbose_name='comment text')
+    comment_text = models.TextField(verbose_name='comment text', name='')
+    # date = models.DateField(verbose_name='comment date', name='', default=timezone.now())
 
 
 class Post(models.Model):
     label = models.ManyToManyField(Label)
     category = models.ManyToManyField(Category)
     like = models.ForeignKey(Like, on_delete=models.CASCADE)
-    post_head = models.CharField(max_length=200, verbose_name='post head')
-    post_body = models.TextField(verbose_name='post body')
-    post_date = models.DateField(verbose_name='post date')
-    post_image = models.ImageField(verbose_name='post image')
+    head = models.CharField(max_length=200, verbose_name='post head')
+    body = models.TextField(verbose_name='post body')
+    # date = models.DateField(verbose_name='post date', default=timezone.now())
+    image = models.ImageField(verbose_name='post image')
 
 
 class User(models.Model):
