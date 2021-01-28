@@ -14,13 +14,13 @@ class Label(models.Model):
 class Like(models.Model):
     like_text = models.CharField(max_length=10, verbose_name='like text', name='')
     like_count = models.IntegerField(verbose_name='like count', name='')
-    # like_date = models.DateField(verbose_name='like date', name='', default=timezone.now())
+    like_date = models.DateTimeField(verbose_name='like date', name='', default='2021-01-28')
 
 
 class Comment(models.Model):
     like = models.ForeignKey(Like, on_delete=models.CASCADE)
     comment_text = models.TextField(verbose_name='comment text', name='')
-    # date = models.DateField(verbose_name='comment date', name='', default=timezone.now())
+    date = models.DateTimeField(verbose_name='comment date', name='', default='2021-01-28')
 
 
 class Post(models.Model):
@@ -29,7 +29,7 @@ class Post(models.Model):
     like = models.ForeignKey(Like, on_delete=models.CASCADE)
     head = models.CharField(max_length=200, verbose_name='post head')
     body = models.TextField(verbose_name='post body')
-    # date = models.DateField(verbose_name='post date', default=timezone.now())
+    date = models.DateTimeField(verbose_name='post date', name='', default='2021-01-28')
     image = models.ImageField(verbose_name='post image')
 
 
