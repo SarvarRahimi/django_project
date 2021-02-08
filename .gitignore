@@ -4,3 +4,5 @@ blog/blog/__pycache__/
 blog/blog/local_settings.py
 blog/posting/__pycache__/
 blog/posting/migrations/__pycache__/
+blog/posting/templatetags/__pycache__/
+.idea/
