@@ -1,0 +1,9 @@
+venv/
+django_venv/
+blog/__pycache__/
+blog/local_settings.py
+posting/__pycache__/
+posting/migrations/__pycache__/
+posting/templatetags/__pycache__/
+.idea/
+__pycache__/
