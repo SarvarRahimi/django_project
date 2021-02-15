@@ -1,4 +1,5 @@
 {% extends 'posting/base.html' %}
+{% load post_extras %}
 {% load static %}
 {% block js %}
     <script src="{% static 'posting/js/base.js' %}"></script>{% endblock %}
@@ -33,7 +34,7 @@
                         <div class="col-2">
                             <div class="d-inline-flex">
                                 <div class="d-inline-flex">
-                                    <p>{{ post.postlikes_set.count }}</p>
+                                    <p>{{ post.postlikes_set | likeCounter:"True" }}</p>
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                          class="bi bi-hand-thumbs-up" viewBox="0 0 16 16">
                                         <path
@@ -41,7 +42,7 @@
                                     </svg>
                                 </div>
                                 <div class="d-inline-flex">
-                                    <p>{{ post.postlikes_set.count }}</p>
+                                    <p>{{ post.postlikes_set | likeCounter:"False" }}</p>
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                          class="bi bi-hand-thumbs-down" viewBox="0 0 16 16">
                                         <path
@@ -52,7 +53,7 @@
                         </div>
                         <div class="col-10 p-0" dir="ltr">
                             <div class="d-inline-flex labels">
-                                {% for label in post.label %}
+                                {% for label in post.label.all %}
                                     <button type="button" class="btn btn-outline-secondary">{{ label }}</button>
                                 {% endfor %}
                             </div>
