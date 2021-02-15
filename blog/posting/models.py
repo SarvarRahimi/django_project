@@ -27,9 +27,9 @@ class Label(models.Model):
 
 class BlogUser(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name='کاربر')
-    email = models.EmailField(verbose_name='ایمیل', name='email')
-    phone_number = models.IntegerField(verbose_name='شماره موبایل')
-    image = models.ImageField(verbose_name='عکس', upload_to='media/user/%Y/%m/%d/', blank=True)
+    email = models.EmailField(verbose_name='ایمیل', name='email', blank=True)
+    phone_number = models.IntegerField(verbose_name='شماره موبایل', blank=True)
+    image = models.ImageField(verbose_name='عکس', upload_to='media/user/', blank=True)
 
     class Meta:
         verbose_name = "کاربر"
@@ -41,7 +41,7 @@ class BlogUser(models.Model):
 
 class Comment(models.Model):
     user = models.ForeignKey(BlogUser, on_delete=models.CASCADE, verbose_name='کاربر', null=True)
-    comment_text = models.TextField(verbose_name='عنوان', editable=False)
+    comment_text = models.TextField(verbose_name='عنوان')
     time = models.DateTimeField(verbose_name='زمان', default=timezone.now)
     like = models.BooleanField(verbose_name='لایک', default=False)
     permission = models.BooleanField(verbose_name='اجازه نمایش', default=False)
@@ -64,7 +64,7 @@ class Post(models.Model):
     body = models.TextField(verbose_name='متن')
     summary = models.CharField(max_length=200, verbose_name='خلاصه', blank=True)
     time = models.DateTimeField(verbose_name='زمان', default=timezone.now)
-    image = models.ImageField(verbose_name='عکس', upload_to='media/%Y/%m/%d/', blank=True)
+    image = models.ImageField(verbose_name='عکس', upload_to='media', blank=True)
     like = models.BooleanField(verbose_name='لایک', default=False)
     permission = models.BooleanField(verbose_name='اجازه نمایش', default=False)
     activated = models.BooleanField(verbose_name='وضعیت فعال بودن', default=False)
@@ -88,7 +88,7 @@ class PostLikes(models.Model):
         verbose_name_plural = "لایک های پست"
 
     def __str__(self):
-        return f'{self.user} \n {self.post}\n like type: {type}'
+        return f'{self.user} \n {self.post}\n like type: {self.type}'
 
 
 class CommentLikes(models.Model):
@@ -101,4 +101,4 @@ class CommentLikes(models.Model):
         verbose_name_plural = "لایک های کامنت"
 
     def __str__(self):
-        return f'{self.user} \n {self.post}\n like type: {type}'
+        return f'{self.user} \n {self.post}\n post type: {self.type}'
