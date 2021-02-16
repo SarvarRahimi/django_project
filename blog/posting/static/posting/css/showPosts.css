@@ -23,3 +23,15 @@
 .labels button {
     margin-left: 3%;
 }
+
+.postLikes div {
+    margin-left: 20%;
+}
+
+.postLikes div p {
+    cursor: default;
+}
+
+.postLikes div svg {
+    cursor: pointer;
+}
