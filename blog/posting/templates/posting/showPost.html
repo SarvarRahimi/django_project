@@ -101,28 +101,26 @@
                     </div>
                     <div>
                         <div class="m-3" id="respond">
-                            <h3>Leave a Comment</h3>
+                            <h3>نظر بدید</h3>
 
                             <form action="{% url 'posting:showPosts' %}" method="post" id="commentForm">
                                 {% csrf_token %}
 
                                 <label for="comment_author" class="required">اسم</label>
-                                <input class="form-control" type="text" name="comment_author" id="comment_author"
+                                <input class="form-control mb-2" type="text" name="comment_author" id="comment_author"
                                        value="" tabindex="1"
                                        required="required">
 
                                 <label for="email" class="required">ایمیل</label>
-                                <input class="form-control" type="email" name="email" id="email" tabindex="2"
+                                <input class="form-control mb-2" type="email" name="email" id="email" tabindex="2"
                                        required="required">
 
                                 <label for="comment" class="required">متن کامنت</label>
-                                <textarea class="form-control" name="comment" id="comment" rows="10" tabindex="4"
+                                <textarea class="form-control mb-2" name="comment" id="comment" rows="10" tabindex="4"
                                           required="required"></textarea>
 
-
-                                <input type="hidden" name="comment_post_ID" value="1" id="comment_post_ID"/>
                                 <input class="btn btn-outline-secondary" name="submit" type="submit"
-                                       value="Submit comment"/>
+                                       value="ثبت"/><br>
 
                             </form>
                         </div>

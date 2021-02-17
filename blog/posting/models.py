@@ -59,7 +59,7 @@ class Post(models.Model):
     author = models.ForeignKey(BlogUser, on_delete=models.CASCADE, verbose_name='نویسنده', null=True)
     label = models.ManyToManyField(Label, verbose_name='برچسب')
     category = models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name='دسته بندی', null=True)
-    comment = models.ForeignKey(Comment, on_delete=models.DO_NOTHING, verbose_name='کامنت', null=True, blank=True)
+    comment = models.ForeignKey(Comment, on_delete=models.SET_NULL, verbose_name='کامنت', null=True, blank=True)
     head = models.CharField(max_length=200, verbose_name='تیتر')
     body = models.TextField(verbose_name='متن')
     summary = models.CharField(max_length=200, verbose_name='خلاصه', blank=True)
