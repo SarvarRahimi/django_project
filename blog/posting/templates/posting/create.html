@@ -1,0 +1,182 @@
+{% extends 'posting/base.html' %}
+{% load post_extras %}
+{% load static %}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'posting/css/create.css' %}">
+    <link rel="stylesheet" href="{% static 'posting/css/menuButton.css' %}">
+    <link rel="stylesheet" href="{% static 'posting/css/toolbar.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+{% endblock %}
+{% block js %}
+    <script src="{% static 'posting/js/FormatToolbar.js' %}"></script>
+    <script src="{% static 'posting/js/FormatToolbarItem.js' %}"></script>
+    <script src="{% static 'posting/js/FontMenuButton.js' %}"></script>
+    <script src="{% static 'posting/js/FontMenu.js' %}"></script>
+    <script src="{% static 'posting/js/FontMenuItem.js' %}"></script>
+    <script src="{% static 'posting/js/SpinButton.js' %}"></script>
+{% endblock %}
+{% block body %}
+    <form action="{% url 'posting:createPosts' %}" method="post">
+        {% csrf_token %}
+        <div class="row m-0 pt-5 justify-content-center">
+            <div class="middle col-10 pt-2">
+                <div class="d-flex justify-content-between postInput">
+                    <div class="d-inline-flex">
+                        <label for="authorBox">
+                            <h4>نویسنده</h4>
+                        </label>
+                        <input type="text" class="form-control" name="authorBox" id="authorBox" value="author user name">
+                    </div>
+
+                    <div class="d-inline-flex">
+                        <label for="labelBox">
+                            <h4>برچسب</h4>
+                        </label>
+                        <input type="text" class="form-control" name="labelBox" id="labelBox" list="labelOptions"
+                               placeholder="انتخاب یا وارد کردن برچسب ...">
+                        <datalist id="labelOptions">
+                            <option value="A">
+                            <option value="B">
+                        </datalist>
+                    </div>
+
+                </div>
+                <br>
+                <div class="d-flex justify-content-between postInput">
+                    <div class="d-inline-flex">
+                        <label for="imageBox">
+                            <h4>عکس</h4>
+                        </label>
+                        <input type="file" class="form-control-file" name="imageBox" id="imageBox">
+                    </div>
+                    <div class="d-inline-flex">
+                        <label for="categoryBox">
+                            <h4>دستبندی</h4>
+                        </label>
+                        <input type="text" class="form-control" name="categoryBox" id="categoryBox"
+                               list="categoryOptions"
+                               placeholder="انتخاب یا وارد کردن دسته بندی ...">
+                        <datalist id="categoryOptions">
+                            <option value="A">
+                            <option value="B">
+                        </datalist>
+                    </div>
+                </div>
+                <br>
+                <div class="form-group">
+                    <label for="headBox">
+                        <h4>عنوان</h4>
+                    </label>
+                    <input type="text" class="form-control" name="headBox" id="headBox" placeholder="عنوان پست ...">
+                </div>
+                <br>
+                <div class="form-group">
+                    <label for="summaryBox">
+                        <h4>خلاصه</h4>
+                    </label>
+                    <input type="text" class="form-control" name="summaryBox" id="summaryBox"
+                           placeholder="خلاصه ای درباره پست ...">
+                </div>
+                <br>
+                <label for="textarea1" class="hidden">
+                    <h4>متن پست</h4>
+                </label>
+                <div class="format d-flex justify-content-between" dir="ltr" role="toolbar" aria-label="Text Formatting"
+                     aria-controls="textarea1">
+                    <div class="group characteristics">
+                        <button class="item bold popup" aria-pressed="false" value="bold" tabindex="0">
+                            <span class="fa fa-bold" aria-hidden="true"></span>
+                            <span class="popup-label"> Bold </span>
+                        </button>
+                        <button class="item italic popup" aria-pressed="false" value="italic" tabindex="-1">
+                            <span class="fa fa-italic" aria-hidden="true"></span>
+                            <span class="popup-label"> Italic </span>
+                        </button>
+                        <button class="item underline popup" aria-pressed="false" value="underline" tabindex="-1">
+                            <span class="fa fa-underline" aria-hidden="true"></span>
+                            <span class="popup-label"> Underline </span>
+                        </button>
+                    </div>
+                    <div class="group" role="radiogroup" aria-label="Text Alignment">
+                        <button role="radio" class="item align-left popup" aria-checked="true" tabindex="-1">
+                            <span class="fa fa-align-left" aria-hidden="true"></span>
+                            <span class="popup-label"> Text Align Left </span>
+                        </button>
+                        <button role="radio" class="item align-center popup" aria-checked="false" tabindex="-1">
+                            <span class="fa fa-align-center" aria-hidden="true"></span>
+                            <span class="popup-label"> Text Align Center </span>
+                        </button>
+                        <button role="radio" class="item align-right popup" aria-checked="false" tabindex="-1">
+                            <span class="fa fa-align-right" aria-hidden="true"></span>
+                            <span class="popup-label"> Text Align Right </span>
+                        </button>
+                    </div>
+                    <div class="group">
+                        <button class="item copy" aria-disabled="true" tabindex="-1">
+                            Copy
+                        </button>
+                        <button class="item paste" aria-disabled="true" tabindex="-1">
+                            Paste
+                        </button>
+                        <button class="item cut" aria-disabled="true" tabindex="-1">Cut</button>
+                    </div>
+                    <div class="menu-popup group">
+                        <button aria-haspopup="true" aria-controls="menu1" class="item menu-button" tabindex="-1"
+                                aria-label="Font: Sans-serif"
+                                style="text-align: left; width: 140px; font-family: sans-serif">
+                            SANS-SERIF
+                            <span></span>
+                        </button>
+                        <ul role="menu" id="menu1" aria-label="Font Family">
+                            <li role="menuitemradio" aria-checked="true" style="font-family: sans-serif">
+                                Sans-serif
+                            </li>
+                            <li role="menuitemradio" aria-checked="false" style="font-family: serif">
+                                Serif
+                            </li>
+                            <li role="menuitemradio" aria-checked="false" style="font-family: monospace">
+                                Monospace
+                            </li>
+                            <li role="menuitemradio" aria-checked="false" style="font-family: fantasy">
+                                Fantasy
+                            </li>
+                            <li role="menuitemradio" aria-checked="false" style="font-family: cursive">
+                                Cursive
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="group">
+                        <div class="item spinbutton" role="spinbutton" tabindex="-1" aria-valuenow="14"
+                             aria-valuetext="14pt" aria-valuemin="8" aria-valuemax="40"
+                             aria-label="Font size in points">
+                            <span class="value"> 14pt </span>
+                            <span class="increase">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12">
+                                <polygon class="increase" fill="#333" points="0,12 11,12 6,2"></polygon>
+                            </svg>
+                        </span>
+                            <span class="decrease">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12">
+                                <polygon class="decrease" fill="#333" points="0,2 11,2 6,12"></polygon>
+                            </svg>
+                        </span>
+                        </div>
+                    </div>
+                    <div class="group">
+                        <label class="input">
+                            <input id="checkbox" class="item nightmode" type="checkbox" tabindex="-1"/>
+                            Night Mode
+                        </label>
+                        <a id="link" class="item link" href="#" tabindex="-1"> Help </a>
+                    </div>
+                </div>
+
+                <br/>
+                <textarea id="textarea1" name="bodyBox" rows="20" cols="80" style="font-family: sans-serif"></textarea>
+            </div>
+            <div class="middle col-5 pt-2 pb-5">
+                <button type="submit" class="btn btn-outline-primary w-100">ایجاد</button>
+            </div>
+        </div>
+    </form>
+{% endblock %}

@@ -4,19 +4,23 @@ from posting.models import Post
 
 
 def showPosts(request):
-    ordered_posts = Post.objects.order_by('-time')
-    # contents = {'list_post': []}
-    # for post in ordered_posts:
-    #     contents['list_post'].append({
-    #         'author': post.author,
-    #         'labels': [label for label in post.label.all()],
-    #         'head': post.head,
-    #         'summary': post.summary,
-    #         'time': post.time,
-    #         'image': post.image,
-    #         'like': post.postlikes_set.filter(type__exact=True).count(),
-    #         'dislike': post.postlikes_set.filter(type__exact=False).count()
-    #     })
-    # for post in ordered_posts:
-    #     print(post)
-    return render(request, 'posting/showPosts.html', {'posts': ordered_posts, })
+    all_posts = Post.objects.all().filter(activated=True, permission=True).order_by('-time')
+    return render(request, 'posting/showPosts.html', {'posts': all_posts})
+
+
+def showCreatePostsPage(request):
+    return render(request, 'posting/create.html')
+
+
+def showPost(request):
+    return render(request, 'posting/showPost.html')
+
+
+def createPosts(request):
+    if request.POST:
+        newPost = Post.objects.create(author=request.POST['authorBox'], label=request.POST['labelBox'],
+                                      image=request.POST['imageBox'], category=request.POST['categoryBox'],
+                                      summary=request.POST['summaryBox'], head=request.POST['headBox'],
+                                      body=request.POST['bodyBox'])
+        newPost.save()
+        return render(request, 'posting/showPosts.html')
