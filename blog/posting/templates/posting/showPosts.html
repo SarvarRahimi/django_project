@@ -22,14 +22,16 @@
                                 <p class="m-0 text-muted" id="pubDate">{{ post.time }}</p>
                             </div>
                         </div>
-                        <h3 class="m-3">{{ post.head }}</h3>
-                        <div class="d-flex postPicture">
-                            {% if post.image %}
-                                <img src="{{ post.image }}" alt="post_image">
-                            {% else %}
-                                <img src="{% static 'posting/images/Empty.jpg' %}" alt="post_image">
-                            {% endif %}
-                        </div>
+                        <a href="{% url 'posting:showPost' post.id %}"><h3 class="m-3 text-dark">{{ post.head }}</h3></a>
+                        <a href="{% url 'posting:showPost' post.id %}">
+                            <div class="d-flex postPicture">
+                                {% if post.image %}
+                                    <img src="{{ post.image }}" alt="post_image">
+                                {% else %}
+                                    <img src="{% static 'posting/images/Empty.jpg' %}" alt="post_image">
+                                {% endif %}
+                            </div>
+                        </a>
                         <div class="card-body">
                             <p class="card-text">{{ post.summary }}</p>
                             <div class="row">
@@ -60,7 +62,8 @@
                                 <div class="col-10 p-0" dir="ltr">
                                     <div class="d-inline-flex labels">
                                         {% for label in post.label.all %}
-                                            <a href="{% url 'posting:showPost' %}" class="btn btn-outline-secondary text-nowrap">{{ label }}</a>
+                                            <a href="{% url 'posting:showPostByLabel' label.id %}"
+                                               class="btn btn-outline-secondary text-nowrap">{{ label }}</a>
                                         {% endfor %}
                                     </div>
                                 </div>
