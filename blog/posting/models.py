@@ -39,33 +39,15 @@ class BlogUser(models.Model):
         return f"{self.user}"
 
 
-class Comment(models.Model):
-    user = models.ForeignKey(BlogUser, on_delete=models.CASCADE, verbose_name='کاربر', null=True)
-    comment_text = models.TextField(verbose_name='عنوان')
-    time = models.DateTimeField(verbose_name='زمان', default=timezone.now)
-    like = models.BooleanField(verbose_name='لایک', default=False, editable=False)
-    permission = models.BooleanField(verbose_name='اجازه نمایش', default=False)
-    activated = models.BooleanField(verbose_name='وضعیت فعال بودن', default=False)
-
-    class Meta:
-        verbose_name = "کامنت"
-        verbose_name_plural = "کامنت ها"
-
-    def __str__(self):
-        return self.comment_text
-
-
 class Post(models.Model):
     author = models.ForeignKey(BlogUser, on_delete=models.CASCADE, verbose_name='نویسنده', null=True)
     label = models.ManyToManyField(Label, verbose_name='برچسب')
     category = models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name='دسته بندی', null=True)
-    comment = models.ForeignKey(Comment, on_delete=models.SET_NULL, verbose_name='کامنت', null=True, blank=True)
     head = models.CharField(max_length=200, verbose_name='تیتر')
     body = models.TextField(verbose_name='متن')
     summary = models.CharField(max_length=200, verbose_name='خلاصه', blank=True)
     time = models.DateTimeField(verbose_name='زمان', default=timezone.now)
-    image = models.ImageField(verbose_name='عکس', upload_to='media', blank=True)
-    like = models.BooleanField(verbose_name='لایک', default=False, editable=False)
+    image = models.ImageField(verbose_name='عکس', upload_to='media/', blank=True)
     permission = models.BooleanField(verbose_name='اجازه نمایش', default=False)
     activated = models.BooleanField(verbose_name='وضعیت فعال بودن', default=False)
 
@@ -76,6 +58,22 @@ class Post(models.Model):
     def __str__(self):
         main_post = f'{self.head} \n {self.body}'
         return main_post
+
+
+class Comment(models.Model):
+    user = models.ForeignKey(BlogUser, on_delete=models.CASCADE, verbose_name='کاربر', null=True)
+    post = models.ForeignKey(Post, on_delete=models.PROTECT, verbose_name='پست', null=True, blank=True)
+    comment_text = models.TextField(verbose_name='عنوان')
+    time = models.DateTimeField(verbose_name='زمان', default=timezone.now)
+    permitted = models.BooleanField(verbose_name='اجازه نمایش', default=False)
+    activated = models.BooleanField(verbose_name='وضعیت فعال بودن', default=False)
+
+    class Meta:
+        verbose_name = "کامنت"
+        verbose_name_plural = "کامنت ها"
+
+    def __str__(self):
+        return self.comment_text
 
 
 class PostLikes(models.Model):
