@@ -3,6 +3,10 @@
 {% load static %}
 {% block css %}
     <link rel="stylesheet" href="{% static 'posting/css/showPosts.css' %}">{% endblock %}
+{% block js %}
+    <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="{% static 'posting/js/base.js' %}"></script>
+{% endblock %}
 {% block body %}
     <div class="row m-0 pt-5">
         <div class="left_side col-2 bg-primary"></div>
@@ -12,7 +16,7 @@
                     <div class="card mb-3">
                         <div class="m-3 d-inline-flex userDate">
                             {% if post.author.image %}
-                                <img class="rounded-circle" src="{{ post.author.image }}" alt="user_profile">
+                                <img class="rounded-circle" src="{{ post.author.image.url }}" alt="user_profile">
                             {% else %}
                                 <img class="rounded-circle" src="{% static 'posting/images/Empty.jpg' %}"
                                      alt="user_profile">
@@ -22,11 +26,12 @@
                                 <p class="m-0 text-muted" id="pubDate">{{ post.time }}</p>
                             </div>
                         </div>
-                        <a href="{% url 'posting:showPost' post.id %}"><h3 class="m-3 text-dark">{{ post.head }}</h3></a>
+                        <a href="{% url 'posting:showPost' post.id %}"><h3 class="m-3 text-dark">{{ post.head }}</h3>
+                        </a>
                         <a href="{% url 'posting:showPost' post.id %}">
                             <div class="d-flex postPicture">
                                 {% if post.image %}
-                                    <img src="{{ post.image }}" alt="post_image">
+                                    <img src="{{ post.image.url }}" alt="post_image">
                                 {% else %}
                                     <img src="{% static 'posting/images/Empty.jpg' %}" alt="post_image">
                                 {% endif %}
@@ -38,8 +43,9 @@
                                 <div class="col-2">
                                     <div class="d-inline-flex postLikes">
                                         <div class="d-inline-flex">
-                                            <p>{{ post.postlikes_set | likeCounter:"True" }}</p>
+                                            <p id="likePost">{{ post.postlikes_set | likeCounter:"True" }}</p>
                                             <svg id="likeSvg" user-id="{{ post.author_id }}" post-id="{{ post.id }}"
+                                                 status="True"
                                                  xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                                  fill="currentColor"
                                                  class="bi bi-hand-thumbs-up" viewBox="0 0 16 16">
@@ -48,8 +54,9 @@
                                             </svg>
                                         </div>
                                         <div class="d-inline-flex">
-                                            <p>{{ post.postlikes_set | likeCounter:"False" }}</p>
+                                            <p id="dislikePost">{{ post.postlikes_set | likeCounter:"False" }}</p>
                                             <svg id="dislikeSvg" user-id="{{ post.author_id }}" post-id="{{ post.id }}"
+                                                 status="False"
                                                  xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                                  fill="currentColor"
                                                  class="bi bi-hand-thumbs-down" viewBox="0 0 16 16">

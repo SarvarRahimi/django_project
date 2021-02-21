@@ -1,6 +1,10 @@
 # from django.http import HttpResponse
+# from django.contrib.auth.models import User
+from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404
-from posting.models import Post, Label
+from django.views.decorators.csrf import csrf_protect
+
+from posting.models import Post, Label, PostLikes, BlogUser
 
 
 def showPosts(request):
@@ -31,3 +35,25 @@ def createPosts(request):
                                       body=request.POST['bodyBox'])
         newPost.save()
         return render(request, 'posting/showPosts.html')
+
+
+@csrf_protect
+def postLiking(request):
+    data = request.POST
+    user = get_object_or_404(BlogUser, pk=data['user_id'])
+    post = get_object_or_404(Post, pk=data['post_id'])
+
+    if data['status'] == 'True':
+        typeLike = True
+    else:
+        typeLike = False
+
+    try:
+        postUserLike = PostLikes.objects.get(user_id=int(data['user_id']))
+        postUserLike.delete()
+    except Exception as e:
+        print(e)
+        newLike = PostLikes.objects.create(post=post, user=user, type=typeLike)
+        newLike.save()
+
+    return JsonResponse({'count': PostLikes.objects.filter(type=typeLike).count(), 'status': typeLike})

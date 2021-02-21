@@ -12,7 +12,7 @@
                     <div class="row justify-content-between">
                         <div class="col m-3 d-inline-flex userDate">
                             {% if post.author.image %}
-                                <img class="rounded-circle" src="{{ post.author.image }}" alt="user_profile">
+                                <img class="rounded-circle" src="{{ post.author.image.url }}" alt="user_profile">
                             {% else %}
                                 <img class="rounded-circle" src="{% static 'posting/images/Empty.jpg' %}"
                                      alt="user_profile">
@@ -34,7 +34,7 @@
 
                     <h3 class="m-3">{{ post.head }}</h3>
                     {% if post.image %}
-                        <img src="{{ post.image }}" alt="post_image">
+                        <img src="{{ post.image.url }}" alt="post_image">
                     {% else %}
                         <img src="{% static 'posting/images/Empty.jpg' %}" alt="post_image">
                     {% endif %}

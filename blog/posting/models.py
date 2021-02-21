@@ -86,7 +86,7 @@ class PostLikes(models.Model):
         verbose_name_plural = "لایک های پست"
 
     def __str__(self):
-        return f'{self.user} \n {self.post}\n like type: {self.type}'
+        return f'{self.user.id} \n {self.post.id}\n like type: {self.type}'
 
 
 class CommentLikes(models.Model):
@@ -99,4 +99,4 @@ class CommentLikes(models.Model):
         verbose_name_plural = "لایک های کامنت"
 
     def __str__(self):
-        return f'{self.user} \n {self.post}\n post type: {self.type}'
+        return f'{self.user.id} \n {self.post.id}\n like type: {self.type}'
