@@ -28,7 +28,7 @@ $(function () {
 
         $.ajax({
             headers: {'X-CSRFToken': csrf_token},
-            url: 'posting/postLiking/',
+            url: ' http://127.0.0.1:8000/posting/postLiking/',
             data: data,
             method: "POST",
         })

@@ -1,10 +1,11 @@
 # from django.http import HttpResponse
 # from django.contrib.auth.models import User
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
+from django.urls import reverse
 from django.views.decorators.csrf import csrf_protect
 
-from posting.models import Post, Label, PostLikes, BlogUser
+from posting.models import Post, Label, PostLikes, BlogUser, Comment
 
 
 def showPosts(request):
@@ -14,7 +15,8 @@ def showPosts(request):
 
 def showPost(request, post_id):
     post = get_object_or_404(Post, pk=post_id)
-    return render(request, 'posting/showPost.html', {'post': post})
+    comments = Comment.objects.all().filter(post_id=post.id, activated=True, permitted=True).order_by('-time')
+    return render(request, 'posting/showPost.html', {'post': post, 'comments': comments})
 
 
 def showCreatePostsPage(request):
@@ -35,6 +37,18 @@ def createPosts(request):
                                       body=request.POST['bodyBox'])
         newPost.save()
         return render(request, 'posting/showPosts.html')
+
+
+def createComment(request, post_id):
+    if request.POST:
+        data = request.POST
+        user = get_object_or_404(BlogUser, pk=request.user.id)
+        post = get_object_or_404(Post, pk=post_id)
+        newComment = Comment.objects.create(user=user, post=post, comment_text=data['comment'])
+        newComment.save()
+        # print('this part is done', post, 'the username is')
+        return HttpResponseRedirect(reverse('posting:showPost', args=(post.id,)))
+        # return render(request, 'posting/showPost.html', {'post': post})
 
 
 @csrf_protect

@@ -27,7 +27,8 @@ class Label(models.Model):
 
 class BlogUser(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name='کاربر')
-    email = models.EmailField(verbose_name='ایمیل', name='email', blank=True)
+    username = models.CharField(verbose_name='نام کاربری', blank=True, max_length=100)
+    email = models.EmailField(verbose_name='ایمیل', blank=True)
     phone_number = models.IntegerField(verbose_name='شماره موبایل', blank=True)
     image = models.ImageField(verbose_name='عکس', upload_to='media/user/', blank=True)
 

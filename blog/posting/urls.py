@@ -8,5 +8,6 @@ urlpatterns = [
     path('<int:post_id>/showPost/', views.showPost, name='showPost'),
     path('createPage/', views.showCreatePostsPage, name='showCreatePostsPage'),
     path('create/', views.createPosts, name='createPosts'),
-    path('postLiking/', views.postLiking, name='postLiking')
+    path('postLiking/', views.postLiking, name='postLiking'),
+    path('<int:post_id>/creatComments/', views.createComment, name='createComments'),
 ]
