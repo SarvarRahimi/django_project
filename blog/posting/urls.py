@@ -10,4 +10,6 @@ urlpatterns = [
     path('create/', views.createPosts, name='createPosts'),
     path('postLiking/', views.postLiking, name='postLiking'),
     path('<int:post_id>/creatComments/', views.createComment, name='createComments'),
+    path('commentLiking/', views.commentLiking, name='commentLiking'),
+    path('search/', views.search, name='search'),
 ]

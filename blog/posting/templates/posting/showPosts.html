@@ -9,7 +9,7 @@
 {% endblock %}
 {% block body %}
     <div class="row m-0 pt-5">
-        <div class="left_side col-2 bg-primary"></div>
+        <div class="left_side col-2"></div>
         <div class="middle col-8 mt-1">
             {% if posts %}
                 {% for post in posts %}
@@ -23,7 +23,7 @@
                             {% endif %}
                             <div>
                                 <p class="m-0">{{ post.author }}</p>
-                                <p class="m-0 text-muted" id="pubDate">{{ post.time }}</p>
+                                <p class="m-0 text-muted" id="pubDate">{{ post.time | timesince }} پیش</p>
                             </div>
                         </div>
                         <a href="{% url 'posting:showPost' post.id %}"><h3 class="m-3 text-dark">{{ post.head }}</h3>
@@ -80,6 +80,6 @@
                 {% endfor %}
             {% endif %}
         </div>
-        <div class="left_side col-2 bg-primary"></div>
+        <div class="left_side col-2"></div>
     </div>
 {% endblock %}

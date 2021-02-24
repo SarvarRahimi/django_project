@@ -49,7 +49,7 @@ class Post(models.Model):
     summary = models.CharField(max_length=200, verbose_name='خلاصه', blank=True)
     time = models.DateTimeField(verbose_name='زمان', default=timezone.now)
     image = models.ImageField(verbose_name='عکس', upload_to='media/', blank=True)
-    permission = models.BooleanField(verbose_name='اجازه نمایش', default=False)
+    permitted = models.BooleanField(verbose_name='اجازه نمایش', default=False)
     activated = models.BooleanField(verbose_name='وضعیت فعال بودن', default=False)
 
     class Meta:
@@ -57,7 +57,7 @@ class Post(models.Model):
         verbose_name_plural = "پست ها"
 
     def __str__(self):
-        main_post = f'{self.head} \n {self.body}'
+        main_post = f'{self.head}'
         return main_post
 
 
@@ -92,7 +92,7 @@ class PostLikes(models.Model):
 
 class CommentLikes(models.Model):
     user = models.ForeignKey(BlogUser, on_delete=models.CASCADE, verbose_name='کاربر', null=True)
-    post = models.ForeignKey(Post, on_delete=models.CASCADE, verbose_name='پست')
+    comment = models.ForeignKey(Comment, on_delete=models.CASCADE, verbose_name='کامنت', null=True)
     type = models.BooleanField(verbose_name='نوع')
 
     class Meta:
@@ -100,4 +100,4 @@ class CommentLikes(models.Model):
         verbose_name_plural = "لایک های کامنت"
 
     def __str__(self):
-        return f'{self.user.id} \n {self.post.id}\n like type: {self.type}'
+        return f'{self.user.id} \n {self.comment.id}\n like type: {self.type}'

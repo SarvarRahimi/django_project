@@ -32,6 +32,18 @@
     cursor: pointer;
 }
 
+.commentLikes div {
+    margin-left: 20%;
+}
+
+.commentLikes div p {
+    cursor: default;
+}
+
+.commentLikes div svg {
+    cursor: pointer;
+}
+
 a {
     text-decoration: none;
 }
