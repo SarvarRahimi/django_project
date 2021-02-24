@@ -23,7 +23,7 @@
                             {% endif %}
                             <div>
                                 <p class="m-0">{{ post.author }}</p>
-                                <p class="m-0 text-muted" id="pubDate">{{ post.time }}</p>
+                                <p class="m-0 text-muted" id="pubDate">{{ post.time | timesince }} پیش</p>
                             </div>
                         </div>
                         <div class="col p-0 m-3" dir="ltr">
@@ -48,7 +48,8 @@
                         <div class="d-inline-flex postLikes">
                             <div class="d-inline-flex">
                                 <p id="likePost">{{ post.postlikes_set | likeCounter:"True" }}</p>
-                                <svg id="likeSvg" user-id="{{ comment.author_id }}" post-id="{{ post.id }}" status="True"
+                                <svg id="likeSvg" user-id="{{ comment.author_id }}" post-id="{{ post.id }}"
+                                     status="True"
                                      xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                      fill="currentColor"
                                      class="bi bi-hand-thumbs-up" viewBox="0 0 16 16">
@@ -73,13 +74,14 @@
                         <h3>کامنت ها</h3>
                         {% if comments %}
                             {% for comment in comments %}
-                                <div class="m-3">
+                                <div class="m-3 p-2 border border-secondary rounded">
                                     <p class="m-0">{{ comment.user }}</p>
                                     <p class="m-3">{{ comment.comment_text }}</p>
                                     <div class="d-inline-flex commentLikes">
                                         <div class="d-inline-flex">
-{#                                            <p id='likeComment'>{{ comment.commentLikes_set | likeCounter:"True" }}</p>#}
-                                            <svg id="likeSvg" user-id="{{ comment.user.id }}" comment-id="{{ comment.id }}"
+                                            {#                                            <p id='likeComment'>{{ comment.commentLikes_set | likeCounter:"True" }}</p>#}
+                                            <svg id="likeSvg" user-id="{{ comment.user.id }}"
+                                                 comment-id="{{ comment.id }}"
                                                  xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                                  fill="currentColor" status="True"
                                                  class="bi bi-hand-thumbs-up" viewBox="0 0 16 16">
@@ -88,8 +90,9 @@
                                             </svg>
                                         </div>
                                         <div class="d-inline-flex">
-{#                                            <p id='dislikeComment'>{{ comment.commentlikes_set | likeCounter:"False" }}</p>#}
-                                            <svg id="dislikeSvg" user-id="{{ comment.user.id }}" comment-id="{{ comment.id }}"
+                                            {#                                            <p id='dislikeComment'>{{ comment.commentlikes_set | likeCounter:"False" }}</p>#}
+                                            <svg id="dislikeSvg" user-id="{{ comment.user.id }}"
+                                                 comment-id="{{ comment.id }}"
                                                  xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                                  fill="currentColor" status="False"
                                                  class="bi bi-hand-thumbs-down" viewBox="0 0 16 16">
@@ -102,7 +105,9 @@
                                 </div>
                             {% endfor %}
                         {% else %}
-                            <p class="text-center text-muted">هنوز کامنتی برای این پست گذاشته نشده است</p>
+                            <div class="border border-secondary rounded">
+                                <p class="text-center text-muted">هنوز کامنتی برای این پست گذاشته نشده است</p>
+                            </div>
                         {% endif %}
                         <br>
                     </div>
@@ -133,6 +138,8 @@
                         </div>
                     </div>
                 </div>
+            {% else %}
+                <h3 class="text-secondary text-center">هیچ پستی پیدا نشد</h3>
             {% endif %}
         </div>
         <div class="left_side col-2"></div>
