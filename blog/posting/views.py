@@ -100,9 +100,13 @@ def commentLiking(request):
 
 def search(request):
     if request.POST:
-        inputValue = request.POST['searchInput']
-        posts = Post.objects.filter(
-            Q(head__iregex=inputValue) | Q(body__iregex=inputValue) | Q(summary__iregex=inputValue) | Q(
-                label__label_text__iregex=inputValue) | Q(category__category_text__iregex=inputValue) | Q(
-                author__user__username__iregex=inputValue) | Q(author__user__first_name__iregex=inputValue)).distinct()
-        return render(request, 'posting/showPosts.html', {'posts': posts})
+        if request.POST['searchInput']:
+            inputValue = request.POST['searchInput']
+            posts = Post.objects.filter(
+                Q(head__iregex=inputValue) | Q(body__iregex=inputValue) | Q(summary__iregex=inputValue) | Q(
+                    label__label_text__iregex=inputValue) | Q(category__category_text__iregex=inputValue) | Q(
+                    author__user__username__iregex=inputValue) | Q(author__user__first_name__iregex=inputValue)).distinct()
+            return render(request, 'posting/showPosts.html', {'posts': posts})
+        else:
+            all_posts = Post.objects.all().filter(activated=True, permitted=True).order_by('-time')
+            return render(request, 'posting/showPosts.html', {'posts': all_posts})

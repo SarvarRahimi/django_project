@@ -12,23 +12,16 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW"
             crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/@popperjs/core@2/dist/umd/popper.js"></script>
+    <link rel="stylesheet" href="{% static 'posting/css/base.css' %}">
     {% block js %}{% endblock %}
     {% block css %}{% endblock %}
     <title>Document</title>
-    <style>
-        body {
-            font-family: Arial, Helvetica, sans-serif;
-        }
-
-        .toolbar {
-            z-index: 1;
-        }
-    </style>
 </head>
 
 <body dir="rtl">
 <div class="row m-0 bg-light justify-content-between position-fixed w-100 bg-white toolbar">
-    <div class='col-8 p-0'>
+    <div class='col-7 p-0'>
         <div class="d-inline-flex">
             <a class="navbar-brand text-secondary" href="{% url 'posting:showPosts' %}">صفحه اصلی</a>
             <a class="nav-link text-secondary" href="{% url 'posting:showCreatePostsPage' %}">نوشتن پست</a>
@@ -40,21 +33,60 @@
             </a>
         </div>
     </div>
-    <div class="col-4" dir='ltr'>
-        <form action="{% url 'posting:search' %}" method="post">
-            {% csrf_token %}
-            <div class="d-inline-flex p-1">
-                <button class="btn btn-outline-primary" type="submit">
+    <div class="col-5" dir='ltr'>
+        <div class="d-inline-flex">
+            <div>
+                <form action="{% url 'posting:search' %}" method="post">
+                    {% csrf_token %}
+                    <div class="d-inline-flex p-1">
+                        <button class="btn btn-outline-primary" type="submit">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16"
+                                 height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                                <path
+                                        d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"></path>
+                            </svg>
+                        </button>
+                        <input name="searchInput" class="form-control" type="search" aria-label="Search"
+                               style='margin-left: 6px;'>
+                    </div>
+                </form>
+            </div>
+            <div class="p-1 divHover">
+                <button class="btn btn-outline-primary text-nowrap" type="submit">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16"
                          height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
                         <path
                                 d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"></path>
                     </svg>
+                    جست و جوی پیشرفته
                 </button>
-                <input name="searchInput" class="form-control" type="search" aria-label="Search"
-                       style='margin-left: 6px;'>
+                <div class="advancedSearch p-2 m-1 rounded" dir="rtl">
+                <form action="{% url 'posting:search' %}" method="post">
+                    {% csrf_token %}
+                    <input name="authorBox" class="dropdown-item form-control" type="search" aria-label="Search"
+                           placeholder="نویسنده..."
+                           style='margin-left: 6px;'>
+                    <input name="headBox" class="dropdown-item form-control" type="search" aria-label="Search"
+                           placeholder="عنوان پست..."
+                           style='margin-left: 6px;'>
+                    <input name="bodyBox" class="dropdown-item form-control" type="search" aria-label="Search"
+                           placeholder="متن پست..."
+                           style='margin-left: 6px;'>
+                    <input name="labelBox" class="dropdown-item form-control" type="search" aria-label="Search"
+                           placeholder="برچسب ها..."
+                           style='margin-left: 6px;'>
+                    <button class="btn btn-outline-primary w-100" type="submit">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16"
+                             height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                            <path
+                                    d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"></path>
+                        </svg>
+                    </button>
+                </form>
             </div>
-        </form>
+            </div>
+
+        </div>
     </div>
 </div>
 {% block body %}{% endblock %}

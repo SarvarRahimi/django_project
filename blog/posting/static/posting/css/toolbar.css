@@ -133,11 +133,11 @@
   }
 
   [role="toolbar"] button[aria-haspopup] span::after {
-    content: url(../images/pulldown-icon.svg);
+    content: url(../images/js.png);
   }
 
   [role="toolbar"] button[aria-haspopup]:focus span::after {
-    content: url(../images/pulldown-icon-focus.svg);
+    content: url(../images/js.png);
   }
 
   [role="toolbar"] [role="spinbutton"] .increase,
