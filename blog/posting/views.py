@@ -4,6 +4,7 @@ from django.http import JsonResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_protect
+from django.db.models import Q
 
 from posting.models import Post, Label, PostLikes, BlogUser, Comment, CommentLikes
 
@@ -99,5 +100,9 @@ def commentLiking(request):
 
 def search(request):
     if request.POST:
-        posts = Post.objects.filter(head__iregex=request.POST['searchInput'])
+        inputValue = request.POST['searchInput']
+        posts = Post.objects.filter(
+            Q(head__iregex=inputValue) | Q(body__iregex=inputValue) | Q(summary__iregex=inputValue) | Q(
+                label__label_text__iregex=inputValue) | Q(category__category_text__iregex=inputValue) | Q(
+                author__user__username__iregex=inputValue) | Q(author__user__first_name__iregex=inputValue)).distinct()
         return render(request, 'posting/showPosts.html', {'posts': posts})
