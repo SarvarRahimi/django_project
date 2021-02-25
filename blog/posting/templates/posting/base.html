@@ -61,7 +61,7 @@
                     جست و جوی پیشرفته
                 </button>
                 <div class="advancedSearch p-2 m-1 rounded" dir="rtl">
-                <form action="{% url 'posting:search' %}" method="post">
+                <form action="{% url 'posting:advancedSearch' %}" method="post">
                     {% csrf_token %}
                     <input name="authorBox" class="dropdown-item form-control" type="search" aria-label="Search"
                            placeholder="نویسنده..."

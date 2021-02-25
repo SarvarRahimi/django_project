@@ -105,8 +105,35 @@ def search(request):
             posts = Post.objects.filter(
                 Q(head__iregex=inputValue) | Q(body__iregex=inputValue) | Q(summary__iregex=inputValue) | Q(
                     label__label_text__iregex=inputValue) | Q(category__category_text__iregex=inputValue) | Q(
-                    author__user__username__iregex=inputValue) | Q(author__user__first_name__iregex=inputValue)).distinct()
+                    author__user__username__iregex=inputValue) | Q(
+                    author__user__first_name__iregex=inputValue)).distinct()
             return render(request, 'posting/showPosts.html', {'posts': posts})
+
+        elif request.POST['authorBox'] or request.POST['headBox'] or request.POST['bodyBox'] or \
+                request.POST['labelBox']:
+            posts = Post.objects.filter(
+                Q(head__iregex=request.POST['headBox']) | Q(body__iregex=request.POST['bodyBox']) | Q(
+                    label__label_text__iregex=request.POST['labelBox']) | Q(
+                    author__user__username__iregex=request.POST['authorBox']) | Q(
+                    author__user__first_name__iregex=request.POST['authorBox'])).distinct()
+            return render(request, 'posting/showPosts.html', {'posts': posts})
+
+        else:
+            all_posts = Post.objects.all().filter(activated=True, permitted=True).order_by('-time')
+            return render(request, 'posting/showPosts.html', {'posts': all_posts})
+
+
+def advancedSearch(request):
+    if request.POST:
+        if request.POST['authorBox'] or request.POST['headBox'] or request.POST['bodyBox'] or \
+                request.POST['labelBox']:
+            posts = Post.objects.filter(
+                Q(head__iregex=request.POST['headBox']) | Q(body__iregex=request.POST['bodyBox']) | Q(
+                    label__label_text__iregex=request.POST['labelBox']) | Q(
+                    author__user__username__iregex=request.POST['authorBox']) | Q(
+                    author__user__first_name__iregex=request.POST['authorBox'])).distinct()
+            return render(request, 'posting/showPosts.html', {'posts': posts})
+
         else:
             all_posts = Post.objects.all().filter(activated=True, permitted=True).order_by('-time')
             return render(request, 'posting/showPosts.html', {'posts': all_posts})

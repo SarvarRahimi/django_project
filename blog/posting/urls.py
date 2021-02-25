@@ -12,4 +12,5 @@ urlpatterns = [
     path('<int:post_id>/creatComments/', views.createComment, name='createComments'),
     path('commentLiking/', views.commentLiking, name='commentLiking'),
     path('search/', views.search, name='search'),
+    path('advancedSearch/', views.advancedSearch, name='advancedSearch'),
 ]
