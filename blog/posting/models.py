@@ -5,6 +5,7 @@ from django.db import models
 
 class Category(models.Model):
     category_text = models.CharField(max_length=200, verbose_name='عنوان')
+    # categories = models.ForeignKey('self', on_delete=models.PROTECT, verbose_name='دسته بندی', null=True, blank=True)
 
     class Meta:
         verbose_name = "دسته بندی"

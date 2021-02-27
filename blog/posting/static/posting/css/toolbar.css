@@ -132,13 +132,13 @@
     float: right;
   }
 
-  [role="toolbar"] button[aria-haspopup] span::after {
-    content: url(../images/js.png);
-  }
+  /*[role="toolbar"] button[aria-haspopup] span::after {*/
+  /*  content: url(../images/js.png);*/
+  /*}*/
 
-  [role="toolbar"] button[aria-haspopup]:focus span::after {
-    content: url(../images/js.png);
-  }
+  /*[role="toolbar"] button[aria-haspopup]:focus span::after {*/
+  /*  content: url(../images/js.png);*/
+  /*}*/
 
   [role="toolbar"] [role="spinbutton"] .increase,
   [role="toolbar"] [role="spinbutton"] .decrease {

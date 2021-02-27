@@ -16,7 +16,7 @@
     <script src="{% static 'posting/js/SpinButton.js' %}"></script>
 {% endblock %}
 {% block body %}
-    <form action="{% url 'posting:createPosts' %}" method="post">
+    <form id="bigForm" action="{% url 'posting:createPosts' %}" method="post">
         {% csrf_token %}
         <div class="row m-0 pt-5 justify-content-center">
             <div class="middle col-10 pt-2">
@@ -25,7 +25,8 @@
                         <label for="authorBox">
                             <h4>نویسنده</h4>
                         </label>
-                        <input type="text" class="form-control" name="authorBox" id="authorBox" value="author user name">
+                        <input type="text" class="form-control" name="authorBox" id="authorBox" value="author user name"
+                               disabled>
                     </div>
 
                     <div class="d-inline-flex">
@@ -35,8 +36,9 @@
                         <input type="text" class="form-control" name="labelBox" id="labelBox" list="labelOptions"
                                placeholder="انتخاب یا وارد کردن برچسب ...">
                         <datalist id="labelOptions">
-                            <option value="A">
-                            <option value="B">
+                            {% for label in labels %}
+                                <option value="{{ label.label_text }}">
+                            {% endfor %}
                         </datalist>
                     </div>
 
@@ -57,8 +59,9 @@
                                list="categoryOptions"
                                placeholder="انتخاب یا وارد کردن دسته بندی ...">
                         <datalist id="categoryOptions">
-                            <option value="A">
-                            <option value="B">
+                            {% for category in categories %}
+                                <option value="{{ category.category_text }}">
+                            {% endfor %}
                         </datalist>
                     </div>
                 </div>
@@ -84,44 +87,50 @@
                 <div class="format d-flex justify-content-between" dir="ltr" role="toolbar" aria-label="Text Formatting"
                      aria-controls="textarea1">
                     <div class="group characteristics">
-                        <button class="item bold popup" aria-pressed="false" value="bold" tabindex="0">
+                        <button type="button" class="item bold popup" aria-pressed="false" value="bold" tabindex="0">
                             <span class="fa fa-bold" aria-hidden="true"></span>
                             <span class="popup-label"> Bold </span>
                         </button>
-                        <button class="item italic popup" aria-pressed="false" value="italic" tabindex="-1">
+                        <button type="button" class="item italic popup" aria-pressed="false" value="italic"
+                                tabindex="-1">
                             <span class="fa fa-italic" aria-hidden="true"></span>
                             <span class="popup-label"> Italic </span>
                         </button>
-                        <button class="item underline popup" aria-pressed="false" value="underline" tabindex="-1">
+                        <button type="button" class="item underline popup" aria-pressed="false" value="underline"
+                                tabindex="-1">
                             <span class="fa fa-underline" aria-hidden="true"></span>
                             <span class="popup-label"> Underline </span>
                         </button>
                     </div>
                     <div class="group" role="radiogroup" aria-label="Text Alignment">
-                        <button role="radio" class="item align-left popup" aria-checked="true" tabindex="-1">
+                        <button type="button" role="radio" class="item align-left popup" aria-checked="true"
+                                tabindex="-1">
                             <span class="fa fa-align-left" aria-hidden="true"></span>
                             <span class="popup-label"> Text Align Left </span>
                         </button>
-                        <button role="radio" class="item align-center popup" aria-checked="false" tabindex="-1">
+                        <button type="button" role="radio" class="item align-center popup" aria-checked="false"
+                                tabindex="-1">
                             <span class="fa fa-align-center" aria-hidden="true"></span>
                             <span class="popup-label"> Text Align Center </span>
                         </button>
-                        <button role="radio" class="item align-right popup" aria-checked="false" tabindex="-1">
+                        <button type="button" role="radio" class="item align-right popup" aria-checked="false"
+                                tabindex="-1">
                             <span class="fa fa-align-right" aria-hidden="true"></span>
                             <span class="popup-label"> Text Align Right </span>
                         </button>
                     </div>
                     <div class="group">
-                        <button class="item copy" aria-disabled="true" tabindex="-1">
+                        <button type="button" class="item copy" aria-disabled="true" tabindex="-1">
                             Copy
                         </button>
-                        <button class="item paste" aria-disabled="true" tabindex="-1">
+                        <button type="button" class="item paste" aria-disabled="true" tabindex="-1">
                             Paste
                         </button>
-                        <button class="item cut" aria-disabled="true" tabindex="-1">Cut</button>
+                        <button type="button" class="item cut" aria-disabled="true" tabindex="-1">Cut</button>
                     </div>
                     <div class="menu-popup group">
-                        <button aria-haspopup="true" aria-controls="menu1" class="item menu-button" tabindex="-1"
+                        <button type="button" aria-haspopup="true" aria-controls="menu1" class="item menu-button"
+                                tabindex="-1"
                                 aria-label="Font: Sans-serif"
                                 style="text-align: left; width: 140px; font-family: sans-serif">
                             SANS-SERIF

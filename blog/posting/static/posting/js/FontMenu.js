@@ -5,53 +5,53 @@
 *   File:   FontMenu.js
 */
 
-var FontMenu = function (domNode, controllerObj) {
-    var elementChildren,
+let FontMenu = function (domNode, controllerObj) {
+  let elementChildren,
       msgPrefix = 'FontMenu constructor argument domNode ';
 
-    // Check whether domNode is a DOM element
-    if (!domNode instanceof Element) {
-      throw new TypeError(msgPrefix + 'is not a DOM Element.');
+  // Check whether domNode is a DOM element
+  if (!domNode instanceof Element) {
+    throw new TypeError(msgPrefix + 'is not a DOM Element.');
+  }
+
+  // Check whether domNode has child elements
+  if (domNode.childElementCount === 0) {
+    throw new Error(msgPrefix + 'has no element children.');
+  }
+
+  // Check whether domNode child elements are A elements
+  let childElement = domNode.firstElementChild;
+
+  while (childElement) {
+    const menuitem = childElement.firstElementChild;
+
+    if (menuitem && menuitem === 'A') {
+      throw new Error(msgPrefix + 'Cannot have descendant elements are A elements.');
     }
+    childElement = childElement.nextElementSibling;
+  }
 
-    // Check whether domNode has child elements
-    if (domNode.childElementCount === 0) {
-      throw new Error(msgPrefix + 'has no element children.');
-    }
+  this.domNode = domNode;
+  this.controller = controllerObj;
 
-    // Check whether domNode child elements are A elements
-    var childElement = domNode.firstElementChild;
+  this.menuitems = [];      // See PopupMenu init method
+  this.firstChars = [];      // See PopupMenu init method
 
-    while (childElement) {
-      var menuitem = childElement.firstElementChild;
+  this.firstItem = null;    // See PopupMenu init method
+  this.lastItem = null;    // See PopupMenu init method
 
-      if (menuitem && menuitem === 'A') {
-        throw new Error(msgPrefix + 'Cannot have descendant elements are A elements.');
-      }
-      childElement = childElement.nextElementSibling;
-    }
+  this.hasFocus = false;   // See MenuItem handleFocus, handleBlur
+  this.hasHover = false;   // See PopupMenu handleMouseover, handleMouseout
+};
 
-    this.domNode = domNode;
-    this.controller = controllerObj;
-
-    this.menuitems = [];      // See PopupMenu init method
-    this.firstChars = [];      // See PopupMenu init method
-
-    this.firstItem = null;    // See PopupMenu init method
-    this.lastItem = null;    // See PopupMenu init method
-
-    this.hasFocus = false;   // See MenuItem handleFocus, handleBlur
-    this.hasHover = false;   // See PopupMenu handleMouseover, handleMouseout
-  };
-
-  /*
-  *   @method FontMenu.prototype.init
-  *
-  *   @desc
-  *       Add domNode event listeners for mouseover and mouseout. Traverse
-  *       domNode children to configure each menuitem and populate menuitems
-  *       array. Initialize firstItem and lastItem properties.
-  */
+/*
+*   @method FontMenu.prototype.init
+*
+*   @desc
+*       Add domNode event listeners for mouseover and mouseout. Traverse
+*       domNode children to configure each menuitem and populate menuitems
+*       array. Initialize firstItem and lastItem properties.
+*/
   FontMenu.prototype.init = function () {
     var menuitemElements, menuitemElement, menuItem, textContent, numItems;
 

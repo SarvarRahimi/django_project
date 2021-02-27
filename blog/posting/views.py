@@ -6,7 +6,7 @@ from django.urls import reverse
 from django.views.decorators.csrf import csrf_protect
 from django.db.models import Q
 
-from posting.models import Post, Label, PostLikes, BlogUser, Comment, CommentLikes
+from posting.models import Post, Label, PostLikes, BlogUser, Comment, CommentLikes, Category
 
 
 def showPosts(request):
@@ -23,7 +23,9 @@ def showPost(request, post_id):
 
 
 def showCreatePostsPage(request):
-    return render(request, 'posting/create.html')
+    labels = Label.objects.all()
+    categories = Category.objects.all()
+    return render(request, 'posting/create.html', {'labels': labels, 'categories': categories})
 
 
 def showPostByLabel(request, label_id):
@@ -33,13 +35,14 @@ def showPostByLabel(request, label_id):
 
 
 def createPosts(request):
-    if request.POST:
-        newPost = Post.objects.create(author=request.POST['authorBox'], label=request.POST['labelBox'],
-                                      image=request.POST['imageBox'], category=request.POST['categoryBox'],
-                                      summary=request.POST['summaryBox'], head=request.POST['headBox'],
-                                      body=request.POST['bodyBox'])
-        newPost.save()
-        return render(request, 'posting/showPosts.html')
+    return render(request, 'posting/showPosts.html')
+    # if request.POST:
+    #     newPost = Post.objects.create(author=request.POST['authorBox'], label=request.POST['labelBox'],
+    #                                   image=request.POST['imageBox'], category=request.POST['categoryBox'],
+    #                                   summary=request.POST['summaryBox'], head=request.POST['headBox'],
+    #                                   body=request.POST['bodyBox'])
+    #     newPost.save()
+    #     return render(request, 'posting/showPosts.html')
 
 
 def createComment(request, post_id):
