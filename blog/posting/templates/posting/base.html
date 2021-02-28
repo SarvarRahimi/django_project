@@ -13,6 +13,7 @@
             integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW"
             crossorigin="anonymous"></script>
     <script src="https://unpkg.com/@popperjs/core@2/dist/umd/popper.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <link rel="stylesheet" href="{% static 'posting/css/base.css' %}">
     {% block js %}{% endblock %}
     {% block css %}{% endblock %}
@@ -61,29 +62,29 @@
                     جست و جوی پیشرفته
                 </button>
                 <div class="advancedSearch p-2 m-1 rounded" dir="rtl">
-                <form action="{% url 'posting:advancedSearch' %}" method="post">
-                    {% csrf_token %}
-                    <input name="authorBox" class="dropdown-item form-control" type="search" aria-label="Search"
-                           placeholder="نویسنده..."
-                           style='margin-left: 6px;'>
-                    <input name="headBox" class="dropdown-item form-control" type="search" aria-label="Search"
-                           placeholder="عنوان پست..."
-                           style='margin-left: 6px;'>
-                    <input name="bodyBox" class="dropdown-item form-control" type="search" aria-label="Search"
-                           placeholder="متن پست..."
-                           style='margin-left: 6px;'>
-                    <input name="labelBox" class="dropdown-item form-control" type="search" aria-label="Search"
-                           placeholder="برچسب ها..."
-                           style='margin-left: 6px;'>
-                    <button class="btn btn-outline-primary w-100" type="submit">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16"
-                             height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
-                            <path
-                                    d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"></path>
-                        </svg>
-                    </button>
-                </form>
-            </div>
+                    <form action="{% url 'posting:advancedSearch' %}" method="post">
+                        {% csrf_token %}
+                        <input name="authorBox" class="dropdown-item form-control" type="search" aria-label="Search"
+                               placeholder="نویسنده..."
+                               style='margin-left: 6px;'>
+                        <input name="headBox" class="dropdown-item form-control" type="search" aria-label="Search"
+                               placeholder="عنوان پست..."
+                               style='margin-left: 6px;'>
+                        <input name="bodyBox" class="dropdown-item form-control" type="search" aria-label="Search"
+                               placeholder="متن پست..."
+                               style='margin-left: 6px;'>
+                        <input name="labelBox" class="dropdown-item form-control" type="search" aria-label="Search"
+                               placeholder="برچسب ها..."
+                               style='margin-left: 6px;'>
+                        <button class="btn btn-outline-primary w-100" type="submit">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16"
+                                 height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                                <path
+                                        d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"></path>
+                            </svg>
+                        </button>
+                    </form>
+                </div>
             </div>
 
         </div>

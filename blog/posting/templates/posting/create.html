@@ -14,32 +14,44 @@
     <script src="{% static 'posting/js/FontMenu.js' %}"></script>
     <script src="{% static 'posting/js/FontMenuItem.js' %}"></script>
     <script src="{% static 'posting/js/SpinButton.js' %}"></script>
+    <script src="{% static 'posting/js/Labels.js' %}"></script>
+
+
 {% endblock %}
 {% block body %}
     <form id="bigForm" action="{% url 'posting:createPosts' %}" method="post">
         {% csrf_token %}
         <div class="row m-0 pt-5 justify-content-center">
             <div class="middle col-10 pt-2">
-                <div class="d-flex justify-content-between postInput">
-                    <div class="d-inline-flex">
-                        <label for="authorBox">
-                            <h4>نویسنده</h4>
-                        </label>
-                        <input type="text" class="form-control" name="authorBox" id="authorBox" value="author user name"
-                               disabled>
-                    </div>
+                <div class="d-flex postInput">
 
-                    <div class="d-inline-flex">
-                        <label for="labelBox">
-                            <h4>برچسب</h4>
-                        </label>
-                        <input type="text" class="form-control" name="labelBox" id="labelBox" list="labelOptions"
-                               placeholder="انتخاب یا وارد کردن برچسب ...">
-                        <datalist id="labelOptions">
-                            {% for label in labels %}
-                                <option value="{{ label.label_text }}">
-                            {% endfor %}
-                        </datalist>
+                    <div class="col-3">
+                        <div class="d-inline-flex">
+                            <label for="authorBox">
+                                <h4>نویسنده</h4>
+                            </label>
+                            <input type="text" class="form-control" name="authorBox" id="authorBox"
+                                   value="author user name"
+                                   disabled>
+                        </div>
+                    </div>
+                    <div class="col-9">
+                        <div class="w-100 d-inline-flex">
+                            <div class="col-8 border border-secondary rounded labelsBox d-inline-flex text-muted p-2"></div>
+                            <label for="labelBoxInput">
+                                <button type="button" class="btn btn-outline-primary text-nowrap labelBtn">برچسب ها
+                                </button>
+                            </label>
+                            <input type="text" class="form-control" name="labelBox" id="labelBoxInput"
+                                   list="labelOptions"
+                                   placeholder="انتخاب یا وارد کردن برچسب ...">
+                            <datalist id="labelOptions">
+                                {% for label in labels %}
+                                    <option value="{{ label.label_text }}">
+                                {% endfor %}
+                            </datalist>
+                        </div>
+
                     </div>
 
                 </div>
