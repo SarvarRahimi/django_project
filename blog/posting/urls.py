@@ -13,4 +13,5 @@ urlpatterns = [
     path('commentLiking/', views.commentLiking, name='commentLiking'),
     path('search/', views.search, name='search'),
     path('advancedSearch/', views.advancedSearch, name='advancedSearch'),
+    path('changeActivation/', views.changeActivation, name='changeActivation'),
 ]

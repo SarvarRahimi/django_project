@@ -10,8 +10,11 @@ from posting.models import Post, Label, PostLikes, BlogUser, Comment, CommentLik
 
 
 def showPosts(request):
-    all_posts = Post.objects.all().filter(activated=True, permitted=True).order_by('-time')
-    return render(request, 'posting/showPosts.html', {'posts': all_posts})
+    if request.user.is_authenticated:
+        all_posts = Post.objects.all()
+    else:
+        all_posts = Post.objects.all().filter(activated=True, permitted=True).order_by('-time')
+    return render(request, 'posting/showPosts.html', {'posts': all_posts, 'user': request.user})
 
 
 def showPost(request, post_id):
@@ -35,14 +38,30 @@ def showPostByLabel(request, label_id):
 
 
 def createPosts(request):
-    return render(request, 'posting/showPosts.html')
-    # if request.POST:
-    #     newPost = Post.objects.create(author=request.POST['authorBox'], label=request.POST['labelBox'],
-    #                                   image=request.POST['imageBox'], category=request.POST['categoryBox'],
-    #                                   summary=request.POST['summaryBox'], head=request.POST['headBox'],
-    #                                   body=request.POST['bodyBox'])
-    #     newPost.save()
-    #     return render(request, 'posting/showPosts.html')
+    if request.POST:
+        user = get_object_or_404(BlogUser, pk=request.user.id)
+        try:
+            category = Category.objects.get(category_text=request.POST['categoryBox'])
+        except Exception as c:
+            print(c)
+            category = Category.objects.create(category_text=request.POST['categoryBox'])
+        newPost = Post.objects.create(author=user,
+                                      image=request.POST['imageBox'], category=category,
+                                      summary=request.POST['summaryBox'], head=request.POST['headBox'],
+                                      body=request.POST['bodyBox'])
+
+        labelsInBack = [label for label in request.POST.get("labelsBox")]
+        for label in labelsInBack:
+            try:
+                labelResult = Label.objects.get(label_text__iregex=label)
+            except Exception as e:
+                labelResult = Label.objects.create(label_text=label)
+                print(e)
+            newPost.label.add(labelResult)
+        newPost.save()
+
+        all_posts = Post.objects.all().filter(activated=True, permitted=True).order_by('-time')
+        return render(request, 'posting/showPosts.html', {'posts': all_posts})
 
 
 def createComment(request, post_id):
@@ -59,6 +78,7 @@ def createComment(request, post_id):
 
 @csrf_protect
 def postLiking(request):
+    # PostLikes.objects.all().delete()
     data = request.POST
     user = get_object_or_404(BlogUser, pk=request.user.id)
     post = get_object_or_404(Post, pk=data['post_id'])
@@ -69,7 +89,7 @@ def postLiking(request):
         typeLike = False
 
     try:
-        postUserLike = PostLikes.objects.get(user_id=int(data['user_id']))
+        postUserLike = PostLikes.objects.get(user=user)
         postUserLike.delete()
     except Exception as e:
         print(e)
@@ -140,3 +160,17 @@ def advancedSearch(request):
         else:
             all_posts = Post.objects.all().filter(activated=True, permitted=True).order_by('-time')
             return render(request, 'posting/showPosts.html', {'posts': all_posts})
+
+
+def changeActivation(request):
+    if request.POST:
+        if request.POST['button_state'] == 'activation':
+            post = get_object_or_404(Post, pk=request.POST['post_id'])
+            post.activated = not post.activated
+            post.save()
+            return JsonResponse({'button': 'activation', 'status': post.activated})
+        else:
+            post = get_object_or_404(Post, pk=request.POST['post_id'])
+            post.permitted = not post.permitted
+            post.save()
+            return JsonResponse({'button': 'permitted', 'status': post.permitted})
