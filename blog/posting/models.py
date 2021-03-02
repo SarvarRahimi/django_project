@@ -5,14 +5,20 @@ from django.db import models
 
 class Category(models.Model):
     category_text = models.CharField(max_length=200, verbose_name='عنوان')
-    # categories = models.ForeignKey('self', on_delete=models.PROTECT, verbose_name='دسته بندی', null=True, blank=True)
+    parent = models.ForeignKey('Category', on_delete=models.PROTECT, verbose_name='پدر', null=True, blank=True)
 
     class Meta:
         verbose_name = "دسته بندی"
         verbose_name_plural = "دسته بندی ها"
 
     def __str__(self):
-        return self.category_text
+        category = ''
+        cat = self
+        while cat.parent:
+            category += cat.parent.category_text + " > "
+            cat = cat.parent
+        category += self.category_text
+        return category
 
 
 class Label(models.Model):

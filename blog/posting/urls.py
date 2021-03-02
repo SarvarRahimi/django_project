@@ -14,4 +14,7 @@ urlpatterns = [
     path('search/', views.search, name='search'),
     path('advancedSearch/', views.advancedSearch, name='advancedSearch'),
     path('changeActivation/', views.changeActivation, name='changeActivation'),
+    path('logOut/', views.logOut, name='logOut'),
+    path('creatingUser/', views.creatingUser, name='creatingUser'),
+    path('logIn/', views.logIn, name='logIn'),
 ]

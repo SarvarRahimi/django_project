@@ -1,0 +1,47 @@
+{% extends 'posting/base.html' %}
+{% load static %}
+{% block css %}
+    <style>
+        body {
+            background-image: url("{% static 'posting/images/cover.jpg' %}");
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-size: cover;
+        }
+    </style>
+{% endblock %}
+{% block body %}
+    <form class="col-4 mx-auto pt-5" action="{% url 'posting:logIn' %}" method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="inputUserName"></label>
+            <input type="text" class="form-control" id="inputUserName" aria-describedby="userNameHelp"
+                   placeholder="نام کاربری خود را وارد کنید..." name="username" required>
+        </div>
+        <div class="form-group">
+            <label for="inputPassword"></label>
+            <input type="password" class="form-control" id="inputPassword" name="password"
+                   placeholder="رمز خود را وارد کنید..." required>
+        </div>
+        <br>
+        <button type="submit" class="btn btn-outline-light w-100">ورود</button>
+        {% if messages %}
+            <ul class="messages my-3 p-0">
+                {% for message in messages %}
+                    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>
+                        {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+                            <div class="text-nowrap p-2 w-100 bg-danger text-white rounded">{{ message }}</div><br>
+                            <div class="text-nowrap p-2 w-100 bg-primary text-white rounded">
+                                هنوز ثبت نام نکرده اید؟
+                                <a href="{% url 'posting:creatingUser' %}" class="text-nowrap text-light">ثبت نام</a>
+                            </div>
+                        {% endif %}
+                        {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+                            <div class="text-nowrap p-2 w-100 bg-success text-white rounded">{{ message }}</div>
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </form>
+{% endblock %}

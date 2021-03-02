@@ -1,7 +1,11 @@
 # from django.http import HttpResponse
 # from django.contrib.auth.models import User
+# from os import abort
+from django.contrib import messages
+from django.contrib.auth import logout, authenticate, login
+from django.contrib.auth.models import User
 from django.http import JsonResponse, HttpResponseRedirect
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_protect
 from django.db.models import Q
@@ -174,3 +178,36 @@ def changeActivation(request):
             post.permitted = not post.permitted
             post.save()
             return JsonResponse({'button': 'permitted', 'status': post.permitted})
+
+
+def creatingUser(request):
+    if request.POST:
+        user = User.objects.create_user(username=request.POST['username'], password=request.POST['password'],
+                                        email=request.POST['email'])
+        user.bloguser.image = request.POST['image']
+        user.bloguser.phone_number = request.POST['phone']
+        user.save()
+        messages.success(request, 'ثبت نام با موفقیت انجام شد')
+        return redirect(request.path)
+    else:
+        return render(request, 'posting/register.html')
+
+
+def logOut(request):
+    logout(request)
+    messages.success(request, 'خروج با موفقیت انجام شد')
+    return redirect(request.META.get('HTTP_REFERER'))
+
+
+def logIn(request):
+    if request.POST:
+        user = authenticate(request, username=request.POST['username'], password=request.POST['password'])
+        if user is not None:
+            login(request, user)
+            messages.add_message(request, messages.SUCCESS, 'ورود با موفقیت انجام شد')
+            return redirect(request.META.get('HTTP_REFERER'))
+        else:
+            messages.add_message(request, messages.ERROR, 'نام کاربری یا رمز عبور اشتباه است')
+            return redirect(request.META.get('HTTP_REFERER'))
+    else:
+        return render(request, 'posting/login.html')

@@ -22,5 +22,6 @@ from posting import views
 urlpatterns = [
     path('', views.showPosts, name='index'),
     path('posting/', include('posting.urls')),
+    # path('accounts/', include('django.contrib.auth.urls')),
     path('login/', admin.site.urls),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
