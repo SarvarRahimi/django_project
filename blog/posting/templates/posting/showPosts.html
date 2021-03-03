@@ -32,23 +32,23 @@
                                 <div class="col-4 situation" dir="ltr" post-id="{{ post.id }}">
                                     {% if post.activated %}
                                         <button class="btn btn-outline-success text-nowrap" button-state="activation"
-                                                id="activation">
+                                                id="{{ forloop.counter }}">
                                             فعال
                                         </button>
                                     {% else %}
                                         <button class="btn btn-outline-secondary text-nowrap" button-state="activation"
-                                                id="activation">
+                                                id="{{ forloop.counter }}">
                                             غیرفعال
                                         </button>
                                     {% endif %}
                                     {% if post.permitted %}
                                         <button class="btn btn-outline-success text-nowrap" button-state="permitted"
-                                                id="permitted">
+                                                id="{{ forloop.counter }}{{ post.id }}">
                                             اجازه نمایش دارد
                                         </button>
                                     {% else %}
                                         <button class="btn btn-outline-secondary text-nowrap" button-state="permitted"
-                                                id="permitted">
+                                                id="{{ forloop.counter }}{{ post.id }}">
                                             اجازه نمایش ندارد
                                         </button>
                                     {% endif %}

@@ -5,20 +5,21 @@ from django.db import models
 
 class Category(models.Model):
     category_text = models.CharField(max_length=200, verbose_name='عنوان')
-    parent = models.ForeignKey('Category', on_delete=models.PROTECT, verbose_name='پدر', null=True, blank=True)
+    # parent = models.ForeignKey('Category', on_delete=models.PROTECT, verbose_name='پدر', null=True, blank=True)
 
     class Meta:
         verbose_name = "دسته بندی"
         verbose_name_plural = "دسته بندی ها"
 
     def __str__(self):
-        category = ''
-        cat = self
-        while cat.parent:
-            category += cat.parent.category_text + " > "
-            cat = cat.parent
-        category += self.category_text
-        return category
+        return self.category_text
+        # category = ''
+        # cat = self
+        # while cat.parent:
+        #     category += cat.parent.category_text + " > "
+        #     cat = cat.parent
+        # category += self.category_text
+        # return category
 
 
 class Label(models.Model):
@@ -34,8 +35,6 @@ class Label(models.Model):
 
 class BlogUser(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name='کاربر')
-    username = models.CharField(verbose_name='نام کاربری', blank=True, max_length=100)
-    email = models.EmailField(verbose_name='ایمیل', blank=True)
     phone_number = models.IntegerField(verbose_name='شماره موبایل', blank=True)
     image = models.ImageField(verbose_name='عکس', upload_to='media/user/', blank=True)
 
@@ -55,7 +54,7 @@ class Post(models.Model):
     body = models.TextField(verbose_name='متن')
     summary = models.CharField(max_length=200, verbose_name='خلاصه', blank=True)
     time = models.DateTimeField(verbose_name='زمان', default=timezone.now)
-    image = models.ImageField(verbose_name='عکس', upload_to='media/', blank=True)
+    image = models.ImageField(verbose_name='عکس', upload_to='media/post/', blank=True)
     permitted = models.BooleanField(verbose_name='اجازه نمایش', default=False)
     activated = models.BooleanField(verbose_name='وضعیت فعال بودن', default=False)
 

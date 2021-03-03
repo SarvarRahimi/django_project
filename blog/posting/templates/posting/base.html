@@ -22,21 +22,34 @@
 
 <body dir="rtl">
 <div class="row m-0 bg-light justify-content-between position-fixed w-100 bg-white toolbar">
-    <div class='col-7 p-0'>
+    <div class='col-8 p-0'>
         <div class="d-inline-flex">
             <a class="navbar-brand text-secondary" href="{% url 'posting:showPosts' %}">صفحه اصلی</a>
             {% if not user.is_authenticated %}
                 <a class="nav-link text-secondary" href="/login/">مدیریت</a>
                 <a class="nav-link text-secondary" href="{% url 'posting:logIn' %}">ورود</a>
-                <a href="#" class="btn btn-outline-success text-nowrap m-1">ثبت نام</a>
+                <a href="{% url 'posting:creatingUser' %}" class="btn btn-outline-success text-nowrap m-1">ثبت نام</a>
             {% else %}
                 <a class="nav-link text-secondary" href="{% url 'posting:showCreatePostsPage' %}">نوشتن پست</a>
                 <a class="nav-link text-secondary" href="{% url 'posting:logOut' %}">خروج</a>
-                <p class="text-secondary p-2">{{ user.username }} خوش آمدید</p>
+                <p class="text-secondary p-2 m-0">{{ user.username }} خوش آمدید</p>
+            {% endif %}
+            {% if messages %}
+                <ul class="messages m-1 p-0" style="list-style-type:none;">
+                    {% for message in messages %}
+                        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>
+                            {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+                                <div class="text-nowrap p-2 w-100 bg-danger text-white rounded">{{ message }}</div>
+                            {% elif message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+                                <div class="text-nowrap p-2 w-100 bg-success text-white rounded">{{ message }}</div>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
             {% endif %}
         </div>
     </div>
-    <div class="col-5" dir='ltr'>
+    <div class="col-4 p-0" dir='ltr'>
         <div class="d-inline-flex">
             <div>
                 <form action="{% url 'posting:search' %}" method="post">

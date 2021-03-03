@@ -19,6 +19,8 @@ $(function () {
     $(".situation button").on("click", function (event) {
         event.preventDefault();
         let postId = $(".situation").attr('post-id')
+        let buttonId = $(this).attr('id')
+        alert(buttonId)
         let buttonState = $(this).attr('button-state')
         const csrf_token = getCookie('csrftoken');
         let data = {
@@ -37,15 +39,15 @@ $(function () {
                 alert("ثبت شد");
                 if (result['status']) {
                     if (result['button'] === 'activation') {
-                        $("#activation").addClass("btn-outline-success").removeClass("btn-outline-secondary").html('فعال');
+                        $("#"+buttonId).addClass("btn-outline-success").removeClass("btn-outline-secondary").html('فعال');
                     } else {
-                        $("#permitted").addClass("btn-outline-success").removeClass("btn-outline-secondary").html('اجازه نمایش دارد');
+                        $("#"+buttonId).addClass("btn-outline-success").removeClass("btn-outline-secondary").html('اجازه نمایش دارد');
                     }
                 } else {
                     if (result['button'] === 'activation') {
-                        $("#activation").addClass("btn-outline-secondary").removeClass("btn-outline-success").html('غیر فعال');
+                        $("#"+buttonId).addClass("btn-outline-secondary").removeClass("btn-outline-success").html('غیر فعال');
                     } else {
-                        $("#permitted").addClass("btn-outline-secondary").removeClass("btn-outline-success").html('اجازه نمایش ندارد');
+                        $("#"+buttonId).addClass("btn-outline-secondary").removeClass("btn-outline-success").html('اجازه نمایش ندارد');
                     }
                 }
             })

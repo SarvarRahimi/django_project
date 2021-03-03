@@ -1,6 +1,3 @@
-# from django.http import HttpResponse
-# from django.contrib.auth.models import User
-# from os import abort
 from django.contrib import messages
 from django.contrib.auth import logout, authenticate, login
 from django.contrib.auth.models import User
@@ -24,21 +21,19 @@ def showPosts(request):
 def showPost(request, post_id):
     post = get_object_or_404(Post, pk=post_id)
     comments = Comment.objects.all().filter(post_id=post.id, activated=True, permitted=True).order_by('-time')
-    # print(comments[0].commentlikes_set.filter(type__exact=True).count())
-    # print(comments[0].commentlikes_set.filter(type__exact=False).count())
-    return render(request, 'posting/showPost.html', {'post': post, 'comments': comments})
+    return render(request, 'posting/showPost.html', {'post': post, 'comments': comments, 'user': request.user})
 
 
 def showCreatePostsPage(request):
     labels = Label.objects.all()
     categories = Category.objects.all()
-    return render(request, 'posting/create.html', {'labels': labels, 'categories': categories})
+    return render(request, 'posting/create.html', {'labels': labels, 'categories': categories, 'user': request.user})
 
 
 def showPostByLabel(request, label_id):
     label = get_object_or_404(Label, pk=label_id)
     posts = Post.objects.all().filter(label__label_text__icontains=label.label_text)
-    return render(request, 'posting/showPosts.html', {'posts': posts})
+    return render(request, 'posting/showPosts.html', {'posts': posts, 'user': request.user})
 
 
 def createPosts(request):
@@ -47,25 +42,29 @@ def createPosts(request):
         try:
             category = Category.objects.get(category_text=request.POST['categoryBox'])
         except Exception as c:
-            print(c)
+            print('categoryError while creating post: ', c)
             category = Category.objects.create(category_text=request.POST['categoryBox'])
         newPost = Post.objects.create(author=user,
                                       image=request.POST['imageBox'], category=category,
                                       summary=request.POST['summaryBox'], head=request.POST['headBox'],
                                       body=request.POST['bodyBox'])
 
-        labelsInBack = [label for label in request.POST.get("labelsBox")]
+        labelsInBack = request.POST.getlist('multiSelect')
         for label in labelsInBack:
             try:
                 labelResult = Label.objects.get(label_text__iregex=label)
             except Exception as e:
                 labelResult = Label.objects.create(label_text=label)
-                print(e)
+                print('labelError while creating post: ', e)
             newPost.label.add(labelResult)
         newPost.save()
-
-        all_posts = Post.objects.all().filter(activated=True, permitted=True).order_by('-time')
-        return render(request, 'posting/showPosts.html', {'posts': all_posts})
+        messages.add_message(request, messages.SUCCESS, 'پست با موفقیت ایجاد شد')
+        return HttpResponseRedirect(reverse('posting:createPosts'))
+    else:
+        labels = Label.objects.all()
+        categories = Category.objects.all()
+        return render(request, 'posting/create.html',
+                      {'labels': labels, 'categories': categories, 'user': request.user})
 
 
 def createComment(request, post_id):
@@ -75,9 +74,8 @@ def createComment(request, post_id):
         post = get_object_or_404(Post, pk=post_id)
         newComment = Comment.objects.create(user=user, post=post, comment_text=data['comment'])
         newComment.save()
-        # print('this part is done', post, 'the username is')
+        messages.add_message(request, messages.SUCCESS, 'کامنت با موفقیت ایجاد شد')
         return HttpResponseRedirect(reverse('posting:showPost', args=(post.id,)))
-        # return render(request, 'posting/showPost.html', {'post': post})
 
 
 @csrf_protect
@@ -96,7 +94,7 @@ def postLiking(request):
         postUserLike = PostLikes.objects.get(user=user)
         postUserLike.delete()
     except Exception as e:
-        print(e)
+        print('likeError while postLiking: ', e)
         newLike = PostLikes.objects.create(post=post, user=user, type=typeLike)
         newLike.save()
 
@@ -118,7 +116,7 @@ def commentLiking(request):
         commentUserLike = CommentLikes.objects.get(user_id=int(data['user_id']))
         commentUserLike.delete()
     except Exception as e:
-        print(e)
+        print('likeError while commentLiking: ', e)
         newLike = CommentLikes.objects.create(comment=comment, user=user, type=typeLike)
         newLike.save()
 
@@ -134,7 +132,7 @@ def search(request):
                     label__label_text__iregex=inputValue) | Q(category__category_text__iregex=inputValue) | Q(
                     author__user__username__iregex=inputValue) | Q(
                     author__user__first_name__iregex=inputValue)).distinct()
-            return render(request, 'posting/showPosts.html', {'posts': posts})
+            return render(request, 'posting/showPosts.html', {'posts': posts, 'user': request.user})
 
         elif request.POST['authorBox'] or request.POST['headBox'] or request.POST['bodyBox'] or \
                 request.POST['labelBox']:
@@ -143,11 +141,11 @@ def search(request):
                     label__label_text__iregex=request.POST['labelBox']) | Q(
                     author__user__username__iregex=request.POST['authorBox']) | Q(
                     author__user__first_name__iregex=request.POST['authorBox'])).distinct()
-            return render(request, 'posting/showPosts.html', {'posts': posts})
+            return render(request, 'posting/showPosts.html', {'posts': posts, 'user': request.user})
 
         else:
             all_posts = Post.objects.all().filter(activated=True, permitted=True).order_by('-time')
-            return render(request, 'posting/showPosts.html', {'posts': all_posts})
+            return render(request, 'posting/showPosts.html', {'posts': all_posts, 'user': request.user})
 
 
 def advancedSearch(request):
@@ -159,11 +157,11 @@ def advancedSearch(request):
                     label__label_text__iregex=request.POST['labelBox']) | Q(
                     author__user__username__iregex=request.POST['authorBox']) | Q(
                     author__user__first_name__iregex=request.POST['authorBox'])).distinct()
-            return render(request, 'posting/showPosts.html', {'posts': posts})
+            return render(request, 'posting/showPosts.html', {'posts': posts, 'user': request.user})
 
         else:
             all_posts = Post.objects.all().filter(activated=True, permitted=True).order_by('-time')
-            return render(request, 'posting/showPosts.html', {'posts': all_posts})
+            return render(request, 'posting/showPosts.html', {'posts': all_posts, 'user': request.user})
 
 
 def changeActivation(request):
@@ -182,13 +180,18 @@ def changeActivation(request):
 
 def creatingUser(request):
     if request.POST:
-        user = User.objects.create_user(username=request.POST['username'], password=request.POST['password'],
-                                        email=request.POST['email'])
-        user.bloguser.image = request.POST['image']
-        user.bloguser.phone_number = request.POST['phone']
-        user.save()
-        messages.success(request, 'ثبت نام با موفقیت انجام شد')
-        return redirect(request.path)
+        user = authenticate(request, username=request.POST['username'], password=request.POST['password'])
+        if user is not None:
+            user = User.objects.create_user(username=request.POST['username'], password=request.POST['password'],
+                                            email=request.POST['email'])
+            user.bloguser.image = request.POST['image']
+            user.bloguser.phone_number = request.POST['phone']
+            user.save()
+            messages.add_message(request, messages.SUCCESS, 'ثبت نام با موفقیت انجام شد')
+            return HttpResponseRedirect(reverse('posting:showPosts'))
+        else:
+            messages.add_message(request, messages.ERROR, 'کاربری با این مشخصات از قبل وجود دارد')
+            return redirect(request.META.get('HTTP_REFERER'))
     else:
         return render(request, 'posting/register.html')
 
@@ -196,7 +199,7 @@ def creatingUser(request):
 def logOut(request):
     logout(request)
     messages.success(request, 'خروج با موفقیت انجام شد')
-    return redirect(request.META.get('HTTP_REFERER'))
+    return HttpResponseRedirect(reverse('posting:showPosts'))
 
 
 def logIn(request):
@@ -205,7 +208,7 @@ def logIn(request):
         if user is not None:
             login(request, user)
             messages.add_message(request, messages.SUCCESS, 'ورود با موفقیت انجام شد')
-            return redirect(request.META.get('HTTP_REFERER'))
+            return HttpResponseRedirect(reverse('posting:showPosts'))
         else:
             messages.add_message(request, messages.ERROR, 'نام کاربری یا رمز عبور اشتباه است')
             return redirect(request.META.get('HTTP_REFERER'))

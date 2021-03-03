@@ -23,32 +23,37 @@
         {% csrf_token %}
         <div class="row m-0 pt-5 justify-content-center">
             <div class="middle col-10 pt-2">
-                <div class="d-flex postInput">
+                <div class="d-flex postInput justify-content-between">
                     <div class="col-3">
                         <div class="d-inline-flex">
                             <label for="authorBox">
                                 <h4>نویسنده</h4>
                             </label>
                             <input type="text" class="form-control" name="authorBox" id="authorBox"
-                                   value="author user name"
+                                   value="{{ user.username }}"
                                    disabled>
                         </div>
                     </div>
-                    <div class="col-9">
-                        <div class="w-100 d-inline-flex">
-                            <div class="col-8 border border-secondary rounded labelsBox d-inline-flex text-muted p-2"></div>
-                            <label for="labelBoxInput">
-                                <button type="button" class="btn btn-outline-primary text-nowrap labelBtn">برچسب ها
-                                </button>
-                            </label>
-                            <input type="text" class="form-control" name="labelBox" id="labelBoxInput"
-                                   list="labelOptions"
-                                   placeholder="انتخاب یا وارد کردن برچسب ...">
-                            <datalist id="labelOptions">
-                                {% for label in labels %}
-                                    <option value="{{ label.label_text }}">
-                                {% endfor %}
-                            </datalist>
+                    <div class="col-3">
+                        <div class="w-100">
+                            <div class="d-inline-flex">
+                                <label for="labelBoxInput">
+                                    <button type="button" class="btn btn-outline-primary text-nowrap labelBtn">برچسب
+                                    </button>
+                                </label>
+                                <input type="text" class="form-control" name="labelBox" id="labelBoxInput"
+                                       list="labelOptions"
+                                       placeholder="انتخاب یا وارد کردن برچسب ...">
+                                <datalist id="labelOptions">
+                                    {% for label in labels %}
+                                        <option value="{{ label.label_text }}">
+                                    {% endfor %}
+                                </datalist>
+                            </div>
+                            <label for="multiSelect"></label>
+                            <select class="form-control labelsBox" name="multiSelect" id="multiSelect" multiple>
+{#                                <option></option>#}
+                            </select>
                         </div>
                     </div>
                 </div>
