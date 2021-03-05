@@ -7,3 +7,4 @@ posting/migrations/__pycache__/
 posting/templatetags/__pycache__/
 .idea/
 __pycache__/
+media/

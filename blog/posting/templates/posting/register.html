@@ -1,8 +1,71 @@
 {% extends 'posting/base.html' %}
-{% load post_extras %}
 {% load static %}
+{% block css %}
+    <style>
+        body {
+            background-image: url("{% static 'posting/images/signup.jpg' %}");
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-size: cover;
+        }
+    </style>
+{% endblock %}
 {% block body %}
-    <form action="{% url 'po' %}">
-
+    <form class="col-4 mx-auto pt-5" action="{% url 'posting:creatingUser' %}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="username"></label>
+            <input type="text" class="form-control" id="username"
+                   placeholder="نام کاربری ..." name="username" required>
+        </div>
+        <div class="form-group">
+            <label for="password"></label>
+            <input type="password" class="form-control" id="password"
+                   placeholder="رمز ..." name="password" required>
+        </div>
+        <div class="form-group">
+            <label for="password2"></label>
+            <input type="password" class="form-control" id="password2"
+                   placeholder="تکرار رمز ..." name="password2" required>
+        </div>
+        <div class="form-group">
+            <label for="firstName"></label>
+            <input type="text" class="form-control" id="firstName"
+                   placeholder="نام خود را وارد کنید..." name="firstName" required>
+        </div>
+        <div class="form-group">
+            <label for="lastName"></label>
+            <input type="text" class="form-control" id="lastName"
+                   placeholder="نام خانوادگی خود را وارد کنید..." name="lastName" required>
+        </div>
+        <div class="form-group">
+            <label for="email"></label>
+            <input type="email" class="form-control" id="email" name="email"
+                   placeholder="ایمیل خود را وارد کنید...">
+        </div>
+        <div class="form-group">
+            <label for="phone"></label>
+            <input type="tel" class="form-control" id="phone" name="phone"
+                   placeholder="شماره تلفن خود را وارد کنید...">
+        </div>
+        <br>
+        <div class="d-inline-flex rounded bg-light w-100 mb-4">
+            <label for="image">عکس پروفایل</label>
+            <input type="file" class="form-control-file" name="image" id="image">
+        </div>
+        <button type="submit" class="btn btn-outline-light w-100">ایجاد</button>
+        {% if messages %}
+            <ul class="messages my-3 p-0" style="list-style-type:none;">
+                {% for message in messages %}
+                    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>
+                        {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+                            <div class="text-nowrap p-2 w-100 bg-danger text-white rounded">{{ message }}</div><br>
+                        {% elif message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+                            <div class="text-nowrap p-2 w-100 bg-success text-white rounded">{{ message }}</div>
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
     </form>
 {% endblock %}

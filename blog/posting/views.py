@@ -12,7 +12,12 @@ from posting.models import Post, Label, PostLikes, BlogUser, Comment, CommentLik
 
 def showPosts(request):
     if request.user.is_authenticated:
-        all_posts = Post.objects.all()
+        if request.user.is_superuser:
+            all_posts = Post.objects.all()
+        else:
+            permitted_posts = Post.objects.all().filter(activated=True, permitted=True).order_by('-time')
+            user_posts = Post.objects.filter(author__user__username__iregex=request.user.username)
+            all_posts = permitted_posts.union(user_posts)
     else:
         all_posts = Post.objects.all().filter(activated=True, permitted=True).order_by('-time')
     return render(request, 'posting/showPosts.html', {'posts': all_posts, 'user': request.user})
@@ -38,6 +43,7 @@ def showPostByLabel(request, label_id):
 
 def createPosts(request):
     if request.POST:
+
         user = get_object_or_404(BlogUser, pk=request.user.id)
         try:
             category = Category.objects.get(category_text=request.POST['categoryBox'])
@@ -45,7 +51,7 @@ def createPosts(request):
             print('categoryError while creating post: ', c)
             category = Category.objects.create(category_text=request.POST['categoryBox'])
         newPost = Post.objects.create(author=user,
-                                      image=request.POST['imageBox'], category=category,
+                                      image=request.FILES['imageBox'], category=category,
                                       summary=request.POST['summaryBox'], head=request.POST['headBox'],
                                       body=request.POST['bodyBox'])
 
@@ -59,7 +65,7 @@ def createPosts(request):
             newPost.label.add(labelResult)
         newPost.save()
         messages.add_message(request, messages.SUCCESS, 'پست با موفقیت ایجاد شد')
-        return HttpResponseRedirect(reverse('posting:createPosts'))
+        return HttpResponseRedirect(reverse('posting:showPosts'))
     else:
         labels = Label.objects.all()
         categories = Category.objects.all()
@@ -75,7 +81,7 @@ def createComment(request, post_id):
         newComment = Comment.objects.create(user=user, post=post, comment_text=data['comment'])
         newComment.save()
         messages.add_message(request, messages.SUCCESS, 'کامنت با موفقیت ایجاد شد')
-        return HttpResponseRedirect(reverse('posting:showPost', args=(post.id,)))
+        return redirect(reverse('posting:showPost', args=(post.id,)))
 
 
 @csrf_protect
@@ -181,14 +187,21 @@ def changeActivation(request):
 def creatingUser(request):
     if request.POST:
         user = authenticate(request, username=request.POST['username'], password=request.POST['password'])
-        if user is not None:
-            user = User.objects.create_user(username=request.POST['username'], password=request.POST['password'],
-                                            email=request.POST['email'])
-            user.bloguser.image = request.POST['image']
-            user.bloguser.phone_number = request.POST['phone']
-            user.save()
-            messages.add_message(request, messages.SUCCESS, 'ثبت نام با موفقیت انجام شد')
-            return HttpResponseRedirect(reverse('posting:showPosts'))
+        if user is None:
+            if request.POST['password'] == request.POST['password2']:
+                user = User.objects.create_user(username=request.POST['username'], password=request.POST['password'],
+                                                email=request.POST['email'])
+                user.first_name = request.POST['firstName']
+                user.last_name = request.POST['lastName']
+                user.save()
+                blogUser = BlogUser.objects.create(user=user, image=request.FILES['image'],
+                                                   phone_number=request.POST['phone'])
+                blogUser.save()
+                messages.add_message(request, messages.SUCCESS, 'ثبت نام با موفقیت انجام شد')
+                return HttpResponseRedirect(reverse('posting:showPosts'))
+            else:
+                messages.add_message(request, messages.ERROR, 'رمزها با هم یکسان نیستند')
+                return redirect(request.META.get('HTTP_REFERER'))
         else:
             messages.add_message(request, messages.ERROR, 'کاربری با این مشخصات از قبل وجود دارد')
             return redirect(request.META.get('HTTP_REFERER'))
