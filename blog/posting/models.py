@@ -36,7 +36,7 @@ class Label(models.Model):
 class BlogUser(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name='کاربر')
     phone_number = models.IntegerField(verbose_name='شماره موبایل', blank=True)
-    image = models.ImageField(verbose_name='عکس', upload_to='media/user/', blank=True)
+    image = models.ImageField(verbose_name='عکس', upload_to='user/', blank=True)
 
     class Meta:
         verbose_name = "کاربر"
@@ -54,7 +54,7 @@ class Post(models.Model):
     body = models.TextField(verbose_name='متن')
     summary = models.CharField(max_length=200, verbose_name='خلاصه', blank=True)
     time = models.DateTimeField(verbose_name='زمان', default=timezone.now)
-    image = models.ImageField(verbose_name='عکس', upload_to='media/post/', blank=True)
+    image = models.ImageField(verbose_name='عکس', upload_to='post/', blank=True)
     permitted = models.BooleanField(verbose_name='اجازه نمایش', default=False)
     activated = models.BooleanField(verbose_name='وضعیت فعال بودن', default=False)
 
