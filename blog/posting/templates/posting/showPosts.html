@@ -29,30 +29,35 @@
                                 </div>
                             </div>
                             {% if user.is_authenticated %}
-                                <div class="col-4 situation" dir="ltr" post-id="{{ post.id }}">
-                                    {% if post.activated %}
-                                        <button class="btn btn-outline-success text-nowrap" button-state="activation"
-                                                id="{{ forloop.counter }}">
-                                            فعال
-                                        </button>
-                                    {% else %}
-                                        <button class="btn btn-outline-secondary text-nowrap" button-state="activation"
-                                                id="{{ forloop.counter }}">
-                                            غیرفعال
-                                        </button>
-                                    {% endif %}
-                                    {% if post.permitted %}
-                                        <button class="btn btn-outline-success text-nowrap" button-state="permitted"
-                                                id="{{ forloop.counter }}{{ post.id }}">
-                                            اجازه نمایش دارد
-                                        </button>
-                                    {% else %}
-                                        <button class="btn btn-outline-secondary text-nowrap" button-state="permitted"
-                                                id="{{ forloop.counter }}{{ post.id }}">
-                                            اجازه نمایش ندارد
-                                        </button>
-                                    {% endif %}
-                                </div>
+                                {% if post.author == user.username or 'ویراستار' in user.groups or user.is_superuser %}
+                                    <div class="col-4 situation" dir="ltr" post-id="{{ post.id }}">
+                                        {% if post.activated %}
+                                            <button class="btn btn-outline-success text-nowrap"
+                                                    button-state="activation"
+                                                    id="{{ forloop.counter }}">
+                                                فعال
+                                            </button>
+                                        {% else %}
+                                            <button class="btn btn-outline-secondary text-nowrap"
+                                                    button-state="activation"
+                                                    id="{{ forloop.counter }}">
+                                                غیرفعال
+                                            </button>
+                                        {% endif %}
+                                        {% if post.permitted %}
+                                            <button class="btn btn-outline-success text-nowrap" button-state="permitted"
+                                                    id="{{ forloop.counter }}{{ post.id }}">
+                                                اجازه نمایش دارد
+                                            </button>
+                                        {% else %}
+                                            <button class="btn btn-outline-secondary text-nowrap"
+                                                    button-state="permitted"
+                                                    id="{{ forloop.counter }}{{ post.id }}">
+                                                اجازه نمایش ندارد
+                                            </button>
+                                        {% endif %}
+                                    </div>
+                                {% endif %}
                             {% endif %}
                         </div>
                         <a href="{% url 'posting:showPost' post.id %}"><h3 class="m-3 text-dark">{{ post.head }}</h3>
