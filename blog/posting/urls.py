@@ -7,6 +7,7 @@ urlpatterns = [
     path('<int:label_id>/showPostByLabel/', views.showPostByLabel, name='showPostByLabel'),
     path('<int:category_id>/showPostByCategory/', views.showPostByCategory, name='showPostByCategory'),
     path('<int:post_id>/showPost/', views.showPost, name='showPost'),
+    path('<int:post_id>/changePost/', views.changePost, name='changePost'),
     path('create/', views.createPosts, name='createPosts'),
     path('postLiking/', views.postLiking, name='postLiking'),
     path('<int:post_id>/creatComments/', views.createComment, name='createComments'),

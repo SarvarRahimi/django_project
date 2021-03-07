@@ -59,6 +59,8 @@
                                                 اجازه نمایش ندارد
                                             </button>
                                         {% endif %}
+                                        <a href="{% url 'posting:changePost' post.id %}"
+                                           class="btn btn-outline-secondary text-nowrap">ویرایش</a>
                                     </div>
                                 {% endif %}
                             {% endif %}

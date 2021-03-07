@@ -41,6 +41,15 @@ def showPostByCategory(request, category_id):
     return render(request, 'posting/showPosts.html', {'posts': posts, 'user': request.user})
 
 
+def changePost(request, post_id):
+    post = get_object_or_404(Post, pk=post_id)
+    labels = Label.objects.all()
+    categories = Category.objects.all()
+
+    return render(request, 'posting/create.html',
+                  {'labels': labels, 'categories': categories, 'user': request.user, 'post': post})
+
+
 def createPosts(request):
     if request.POST:
         try:
