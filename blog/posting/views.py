@@ -16,7 +16,7 @@ def showPosts(request):
             all_posts = Post.objects.all()
         else:
             permitted_posts = Post.objects.all().filter(activated=True, permitted=True).order_by('-time')
-            user_posts = Post.objects.filter(author__user__username__iregex=request.user.username)
+            user_posts = Post.objects.filter(author__user__username__iexact=request.user.username)
             all_posts = permitted_posts.union(user_posts)
     else:
         all_posts = Post.objects.all().filter(activated=True, permitted=True).order_by('-time')
@@ -43,22 +43,34 @@ def showPostByLabel(request, label_id):
 
 def createPosts(request):
     if request.POST:
+        try:
+            user = BlogUser.objects.get(user__username__iexact=request.user.username)
+        except Exception as c:
+            print('the user does not exist or not permitted: ', c)
+            messages.add_message(request, messages.ERROR, 'شما برای ساخت پست مجاز نیستید')
+            return HttpResponseRedirect(reverse('posting:showPosts'))
 
-        user = get_object_or_404(BlogUser, pk=request.user.id)
         try:
             category = Category.objects.get(category_text=request.POST['categoryBox'])
         except Exception as c:
             print('categoryError while creating post: ', c)
             category = Category.objects.create(category_text=request.POST['categoryBox'])
-        newPost = Post.objects.create(author=user,
-                                      image=request.FILES['imageBox'], category=category,
+
+        try:
+            image = request.FILES['imageBox']
+        except Exception as c:
+            print('imageError while creating post: ', c)
+            messages.add_message(request, messages.ERROR, 'هیچ عکسی برای پست انتخاب نشده است')
+            return HttpResponseRedirect(reverse('posting:createPosts'))
+
+        newPost = Post.objects.create(author=user, category=category, image=image,
                                       summary=request.POST['summaryBox'], head=request.POST['headBox'],
                                       body=request.POST['bodyBox'])
 
         labelsInBack = request.POST.getlist('multiSelect')
         for label in labelsInBack:
             try:
-                labelResult = Label.objects.get(label_text__iregex=label)
+                labelResult = Label.objects.get(label_text__iexact=label)
             except Exception as e:
                 labelResult = Label.objects.create(label_text=label)
                 print('labelError while creating post: ', e)
