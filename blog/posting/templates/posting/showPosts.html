@@ -26,10 +26,13 @@
                                 <div>
                                     <p class="m-0">{{ post.author }}</p>
                                     <p class="m-0 text-muted" id="pubDate">{{ post.time | timesince }} پیش</p>
+                                    <p class="m-0 text-muted"> دسته بندی:<a
+                                            href="{% url 'posting:showPostByCategory' post.category.id %}">{{ post.category }}</a>
+                                    </p>
                                 </div>
                             </div>
                             {% if user.is_authenticated %}
-                                {% if post.author == user.username or 'ویراستار' in user.groups or user.is_superuser %}
+                                {% if post.author == user.username or user|has_group:'ویراستار' or user.is_superuser %}
                                     <div class="col-4 situation" dir="ltr" post-id="{{ post.id }}">
                                         {% if post.activated %}
                                             <button class="btn btn-outline-success text-nowrap"
@@ -79,7 +82,7 @@
                                         <div class="d-inline-flex postLikes">
                                             <div class="d-inline-flex">
                                                 <p id="likePost">{{ post.postlikes_set | likeCounter:"True" }}</p>
-                                                <svg id="likeSvg" user-id="{{ post.author_id }}" post-id="{{ post.id }}"
+                                                <svg id="likeSvg" user-id="{{ user.id }}" post-id="{{ post.id }}"
                                                      status="True"
                                                      xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                                      fill="currentColor"
@@ -90,7 +93,7 @@
                                             </div>
                                             <div class="d-inline-flex">
                                                 <p id="dislikePost">{{ post.postlikes_set | likeCounter:"False" }}</p>
-                                                <svg id="dislikeSvg" user-id="{{ post.author_id }}"
+                                                <svg id="dislikeSvg" user-id="{{ user.id }}"
                                                      post-id="{{ post.id }}"
                                                      status="False"
                                                      xmlns="http://www.w3.org/2000/svg" width="16" height="16"

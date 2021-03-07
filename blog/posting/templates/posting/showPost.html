@@ -24,6 +24,9 @@
                             <div>
                                 <p class="m-0">{{ post.author }}</p>
                                 <p class="m-0 text-muted" id="pubDate">{{ post.time | timesince }} پیش</p>
+                                <p class="m-0 text-muted"> دسته بندی:<a
+                                        href="{% url 'posting:showPostByCategory' post.category.id %}">{{ post.category }}</a>
+                                </p>
                             </div>
                         </div>
                         <div class="col p-0 m-3" dir="ltr">
@@ -48,7 +51,7 @@
                         <div class="d-inline-flex postLikes">
                             <div class="d-inline-flex">
                                 <p id="likePost">{{ post.postlikes_set | likeCounter:"True" }}</p>
-                                <svg id="likeSvg" user-id="{{ comment.author_id }}" post-id="{{ post.id }}"
+                                <svg id="likeSvg" user-id="{{ user.id }}" post-id="{{ post.id }}"
                                      status="True"
                                      xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                      fill="currentColor"
@@ -59,7 +62,7 @@
                             </div>
                             <div class="d-inline-flex">
                                 <p id="dislikePost">{{ post.postlikes_set | likeCounter:"False" }}</p>
-                                <svg id="dislikeSvg" user-id="{{ post.author_id }}" post-id="{{ post.id }}"
+                                <svg id="dislikeSvg" user-id="{{ user.id }}" post-id="{{ post.id }}"
                                      status="False"
                                      xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                      fill="currentColor"
@@ -81,7 +84,7 @@
                                         <div class="d-inline-flex commentLikes">
                                             <div class="d-inline-flex">
                                                 {#                                            <p id='likeComment'>{{ comment.commentLikes_set | likeCounter:"True" }}</p>#}
-                                                <svg id="likeSvg" user-id="{{ comment.user.id }}"
+                                                <svg id="likeSvg" user-id="{{ user.id }}"
                                                      comment-id="{{ comment.id }}"
                                                      xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                                      fill="currentColor" status="True"
@@ -92,7 +95,7 @@
                                             </div>
                                             <div class="d-inline-flex">
                                                 {#                                            <p id='dislikeComment'>{{ comment.commentlikes_set | likeCounter:"False" }}</p>#}
-                                                <svg id="dislikeSvg" user-id="{{ comment.user.id }}"
+                                                <svg id="dislikeSvg" user-id="{{ user.id }}"
                                                      comment-id="{{ comment.id }}"
                                                      xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                                      fill="currentColor" status="False"

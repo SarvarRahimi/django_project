@@ -32,7 +32,7 @@
             {% else %}
                 {% if user.is_superuser %}<a class="nav-link text-secondary" href="/login/">مدیریت</a>{% endif %}
                 {% if 'posting.add_post' in user.get_all_permissions %}
-                    <a class="nav-link text-secondary" href="{% url 'posting:showCreatePostsPage' %}">نوشتن پست</a>
+                    <a class="nav-link text-secondary" href="{% url 'posting:createPosts' %}">نوشتن پست</a>
                 {% endif %}
                 <a class="nav-link text-secondary" href="{% url 'posting:logOut' %}">خروج</a>
                 <p class="text-secondary p-2 m-0">{{ user.username }} خوش آمدید</p>

@@ -1,7 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth import logout, authenticate, login
 from django.contrib.auth.models import User
-from django.http import JsonResponse, HttpResponseRedirect
+from django.http import JsonResponse, HttpResponseRedirect, Http404
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_protect
@@ -29,15 +29,15 @@ def showPost(request, post_id):
     return render(request, 'posting/showPost.html', {'post': post, 'comments': comments, 'user': request.user})
 
 
-def showCreatePostsPage(request):
-    labels = Label.objects.all()
-    categories = Category.objects.all()
-    return render(request, 'posting/create.html', {'labels': labels, 'categories': categories, 'user': request.user})
-
-
 def showPostByLabel(request, label_id):
     label = get_object_or_404(Label, pk=label_id)
     posts = Post.objects.all().filter(label__label_text__icontains=label.label_text)
+    return render(request, 'posting/showPosts.html', {'posts': posts, 'user': request.user})
+
+
+def showPostByCategory(request, category_id):
+    category = get_object_or_404(Category, pk=category_id)
+    posts = Post.objects.all().filter(category__category_text__icontains=category.category_text)
     return render(request, 'posting/showPosts.html', {'posts': posts, 'user': request.user})
 
 
@@ -94,6 +94,8 @@ def createComment(request, post_id):
         newComment.save()
         messages.add_message(request, messages.SUCCESS, 'کامنت با موفقیت ایجاد شد')
         return redirect(reverse('posting:showPost', args=(post.id,)))
+    else:
+        raise Http404
 
 
 @csrf_protect
@@ -131,7 +133,7 @@ def commentLiking(request):
         typeLike = False
 
     try:
-        commentUserLike = CommentLikes.objects.get(user_id=int(data['user_id']))
+        commentUserLike = CommentLikes.objects.get(user=user)
         commentUserLike.delete()
     except Exception as e:
         print('likeError while commentLiking: ', e)
@@ -164,6 +166,8 @@ def search(request):
         else:
             all_posts = Post.objects.all().filter(activated=True, permitted=True).order_by('-time')
             return render(request, 'posting/showPosts.html', {'posts': all_posts, 'user': request.user})
+    else:
+        raise Http404
 
 
 def advancedSearch(request):
@@ -180,6 +184,8 @@ def advancedSearch(request):
         else:
             all_posts = Post.objects.all().filter(activated=True, permitted=True).order_by('-time')
             return render(request, 'posting/showPosts.html', {'posts': all_posts, 'user': request.user})
+    else:
+        raise Http404
 
 
 def changeActivation(request):
@@ -194,6 +200,8 @@ def changeActivation(request):
             post.permitted = not post.permitted
             post.save()
             return JsonResponse({'button': 'permitted', 'status': post.permitted})
+    else:
+        raise Http404
 
 
 def creatingUser(request):
