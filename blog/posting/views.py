@@ -12,7 +12,7 @@ from posting.models import Post, Label, PostLikes, BlogUser, Comment, CommentLik
 
 def showPosts(request):
     if request.user.is_authenticated:
-        if request.user.is_superuser:
+        if request.user.is_superuser or request.user.groups.filter(name__iexact='ویراستار').exists():
             all_posts = Post.objects.all()
         else:
             permitted_posts = Post.objects.all().filter(activated=True, permitted=True).order_by('-time')
@@ -27,7 +27,7 @@ def showPost(request, post_id):
     post = get_object_or_404(Post, pk=post_id)
     if request.user.is_authenticated:
         if request.user.is_superuser or request.user.groups.filter(name='ویراستار').exists():
-            all_comments = Comment.objects.all()
+            all_comments = Comment.objects.filter(post_id=post.id)
         else:
             all_comments = Comment.objects.all().filter(post_id=post.id, activated=True, permitted=True).order_by(
                 '-time')
@@ -112,7 +112,8 @@ def createPosts(request):
 def createComment(request, post_id):
     if request.POST:
         data = request.POST
-        user = get_object_or_404(BlogUser, pk=request.user.id)
+        user = get_object_or_404(BlogUser, pk=request.user.id-1)
+        print(user)
         post = get_object_or_404(Post, pk=post_id)
         newComment = Comment.objects.create(user=user, post=post, comment_text=data['comment'])
         newComment.save()
@@ -126,7 +127,11 @@ def createComment(request, post_id):
 def postLiking(request):
     # PostLikes.objects.all().delete()
     data = request.POST
-    user = get_object_or_404(BlogUser, pk=request.user.id)
+    if not request.user.is_superuser:
+        user = get_object_or_404(BlogUser, pk=request.user.id-1)
+    else:
+        user = get_object_or_404(BlogUser, pk=request.user.id)
+    print(user)
     post = get_object_or_404(Post, pk=data['post_id'])
 
     if data['status'] == 'True':
@@ -148,7 +153,8 @@ def postLiking(request):
 @csrf_protect
 def commentLiking(request):
     data = request.POST
-    user = get_object_or_404(BlogUser, pk=request.user.id)
+    user = get_object_or_404(BlogUser, pk=request.user.id-1)
+    print(user)
     comment = get_object_or_404(Comment, pk=data['comment_id'])
 
     if data['status'] == 'True':

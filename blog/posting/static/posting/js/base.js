@@ -20,6 +20,7 @@ $(function () {
         event.preventDefault();
         const csrf_token = getCookie('csrftoken');
         let postId = $(this).attr('post-id');
+        // alert($(this).attr('user-id'));
         let data = {
             "user_id": $(this).attr('user-id'),
             "post_id": postId,
