@@ -29,9 +29,15 @@
                             <label for="authorBox">
                                 <h4>نویسنده</h4>
                             </label>
-                            <input type="text" class="form-control" name="authorBox" id="authorBox"
-                                   value="{{ user.username }}"
-                                   disabled>
+                            {% if post %}
+                                <input type="text" class="form-control" name="authorBox" id="authorBox"
+                                       value="{{ post.author }}"
+                                       disabled>
+                            {% else %}
+                                <input type="text" class="form-control" name="authorBox" id="authorBox"
+                                       value="{{ user.username }}"
+                                       disabled>
+                            {% endif %}
                         </div>
                     </div>
                     <div class="col-3">
@@ -52,7 +58,11 @@
                             </div>
                             <label for="multiSelect"></label>
                             <select class="form-control labelsBox" name="multiSelect" id="multiSelect" multiple>
-{#                                <option></option>#}
+                                {% if post %}
+                                    {% for label in post.label.all %}
+                                        <option>{{ label }}</option>
+                                    {% endfor %}
+                                {% endif %}
                             </select>
                         </div>
                     </div>
@@ -69,9 +79,16 @@
                         <label for="categoryBox">
                             <h4>دستبندی</h4>
                         </label>
-                        <input type="text" class="form-control" name="categoryBox" id="categoryBox"
-                               list="categoryOptions"
-                               placeholder="انتخاب یا وارد کردن دسته بندی ...">
+                        {% if post %}
+                            <input type="text" class="form-control" name="categoryBox" id="categoryBox"
+                                   list="categoryOptions"
+                                   placeholder="انتخاب یا وارد کردن دسته بندی ..." value="{{ post.category }}">
+                        {% else %}
+                            <input type="text" class="form-control" name="categoryBox" id="categoryBox"
+                                   list="categoryOptions"
+                                   placeholder="انتخاب یا وارد کردن دسته بندی ...">
+                        {% endif %}
+
                         <datalist id="categoryOptions">
                             {% for category in categories %}
                                 <option value="{{ category.category_text }}">
@@ -84,15 +101,26 @@
                     <label for="headBox">
                         <h4>عنوان</h4>
                     </label>
-                    <input type="text" class="form-control" name="headBox" id="headBox" placeholder="عنوان پست ...">
+                    {% if post %}
+                        <input type="text" class="form-control" name="headBox" id="headBox" placeholder="عنوان پست ..."
+                               value="{{ post.head }}">
+                    {% else %}
+                        <input type="text" class="form-control" name="headBox" id="headBox" placeholder="عنوان پست ...">
+                    {% endif %}
                 </div>
                 <br>
                 <div class="form-group">
                     <label for="summaryBox">
                         <h4>خلاصه</h4>
                     </label>
-                    <input type="text" class="form-control" name="summaryBox" id="summaryBox"
-                           placeholder="خلاصه ای درباره پست ...">
+                    {% if post %}
+                        <input type="text" class="form-control" name="summaryBox" id="summaryBox"
+                               placeholder="خلاصه ای درباره پست ..." value="{{ post.summary }}">
+                    {% else %}
+                        <input type="text" class="form-control" name="summaryBox" id="summaryBox"
+                               placeholder="خلاصه ای درباره پست ...">
+                    {% endif %}
+
                 </div>
                 <br>
                 <label for="textarea1" class="hidden">
@@ -195,9 +223,19 @@
                 </div>
 
                 <br/>
-                <textarea id="textarea1" name="bodyBox" rows="20" cols="80" style="font-family: sans-serif"></textarea>
+                {% if post %}
+                    <textarea id="textarea1" name="bodyBox" rows="20" cols="80"
+                              style="font-family: sans-serif">{{ post.body }}</textarea>
+                {% else %}
+                    <textarea id="textarea1" name="bodyBox" rows="20" cols="80"
+                              style="font-family: sans-serif"></textarea>
+                {% endif %}
+
             </div>
             <div class="middle col-5 pt-2 pb-5">
+                {% if post %}
+                    <input type="hidden" name="old_post" value="{{ post.id }}">
+                {% endif %}
                 <button type="submit" class="btn btn-outline-primary w-100">ایجاد</button>
             </div>
         </div>

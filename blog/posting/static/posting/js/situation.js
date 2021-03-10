@@ -18,12 +18,13 @@ function getCookie(name) {
 $(function () {
     $(".situation button").on("click", function (event) {
         event.preventDefault();
-        let postId = $(".situation").attr('post-id')
-        let buttonId = $(this).attr('id')
-        alert(buttonId)
-        let buttonState = $(this).attr('button-state')
+        let postId = $(".situation").attr('post-id');
+        let typeChange = $(".situation").attr('type-change');
+        let buttonId = $(this).attr('id');
+        let buttonState = $(this).attr('button-state');
         const csrf_token = getCookie('csrftoken');
         let data = {
+            "type_change": typeChange,
             "post_id": postId,
             "button_state": buttonState,
             "csrfmiddlewaretoken": csrf_token

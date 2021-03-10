@@ -25,8 +25,15 @@ def showPosts(request):
 
 def showPost(request, post_id):
     post = get_object_or_404(Post, pk=post_id)
-    comments = Comment.objects.all().filter(post_id=post.id, activated=True, permitted=True).order_by('-time')
-    return render(request, 'posting/showPost.html', {'post': post, 'comments': comments, 'user': request.user})
+    if request.user.is_authenticated:
+        if request.user.is_superuser or request.user.groups.filter(name='ویراستار').exists():
+            all_comments = Comment.objects.all()
+        else:
+            all_comments = Comment.objects.all().filter(post_id=post.id, activated=True, permitted=True).order_by(
+                '-time')
+    else:
+        all_comments = Comment.objects.all().filter(post_id=post.id, activated=True, permitted=True).order_by('-time')
+    return render(request, 'posting/showPost.html', {'post': post, 'comments': all_comments, 'user': request.user})
 
 
 def showPostByLabel(request, label_id):
@@ -70,11 +77,19 @@ def createPosts(request):
         except Exception as c:
             print('imageError while creating post: ', c)
             messages.add_message(request, messages.ERROR, 'هیچ عکسی برای پست انتخاب نشده است')
-            return HttpResponseRedirect(reverse('posting:createPosts'))
+            return redirect(request.META.get('HTTP_REFERER'))
+            # return HttpResponseRedirect(reverse('posting:createPosts'))
 
-        newPost = Post.objects.create(author=user, category=category, image=image,
-                                      summary=request.POST['summaryBox'], head=request.POST['headBox'],
-                                      body=request.POST['bodyBox'])
+        try:
+            oldPostId = request.POST['old_post']
+            newPost = get_object_or_404(Post, pk=oldPostId)
+            newPost.category = category
+            newPost.image = image
+        except Exception as p:
+            print('creatingPostError while creating post: ', p)
+            newPost = Post.objects.create(author=user, category=category, image=image,
+                                          summary=request.POST['summaryBox'], head=request.POST['headBox'],
+                                          body=request.POST['bodyBox'])
 
         labelsInBack = request.POST.getlist('multiSelect')
         for label in labelsInBack:
@@ -85,7 +100,7 @@ def createPosts(request):
                 print('labelError while creating post: ', e)
             newPost.label.add(labelResult)
         newPost.save()
-        messages.add_message(request, messages.SUCCESS, 'پست با موفقیت ایجاد شد')
+        messages.add_message(request, messages.SUCCESS, 'پست با موفقیت ثبت شد')
         return HttpResponseRedirect(reverse('posting:showPosts'))
     else:
         labels = Label.objects.all()
@@ -200,15 +215,27 @@ def advancedSearch(request):
 def changeActivation(request):
     if request.POST:
         if request.POST['button_state'] == 'activation':
-            post = get_object_or_404(Post, pk=request.POST['post_id'])
-            post.activated = not post.activated
-            post.save()
-            return JsonResponse({'button': 'activation', 'status': post.activated})
+            if request.POST['type_change'] == 'post':
+                post = get_object_or_404(Post, pk=request.POST['post_id'])
+                post.activated = not post.activated
+                post.save()
+                return JsonResponse({'button': 'activation', 'status': post.activated})
+            else:
+                comment = get_object_or_404(Comment, pk=request.POST['post_id'])
+                comment.activated = not comment.activated
+                comment.save()
+                return JsonResponse({'button': 'activation', 'status': comment.activated})
         else:
-            post = get_object_or_404(Post, pk=request.POST['post_id'])
-            post.permitted = not post.permitted
-            post.save()
-            return JsonResponse({'button': 'permitted', 'status': post.permitted})
+            if request.POST['type_change'] == 'post':
+                post = get_object_or_404(Post, pk=request.POST['post_id'])
+                post.permitted = not post.permitted
+                post.save()
+                return JsonResponse({'button': 'permitted', 'status': post.permitted})
+            else:
+                comment = get_object_or_404(Comment, pk=request.POST['post_id'])
+                comment.permitted = not comment.permitted
+                comment.save()
+                return JsonResponse({'button': 'permitted', 'status': comment.permitted})
     else:
         raise Http404
 

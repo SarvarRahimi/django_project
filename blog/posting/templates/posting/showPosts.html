@@ -33,7 +33,7 @@
                             </div>
                             {% if user.is_authenticated %}
                                 {% if post.author == user.username or user|has_group:'ویراستار' or user.is_superuser %}
-                                    <div class="col-4 situation" dir="ltr" post-id="{{ post.id }}">
+                                    <div class="col-4 situation" dir="ltr" post-id="{{ post.id }}" type-change="post">
                                         {% if post.activated %}
                                             <button class="btn btn-outline-success text-nowrap"
                                                     button-state="activation"

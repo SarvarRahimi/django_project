@@ -6,6 +6,7 @@
 {% block js %}
     <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
     <script type="text/javascript" src="{% static 'posting/js/base.js' %}"></script>
+    <script type="text/javascript" src="{% static 'posting/js/situation.js' %}"></script>
 {% endblock %}
 {% block body %}
     <div class="row m-0 pt-5">
@@ -80,7 +81,56 @@
                         {% if comments %}
                             {% for comment in comments %}
                                 <div class="m-3 p-2 shadow-lg border-secondary rounded">
-                                    <p class="m-0">کاربر:{{ comment.user }}</p>
+                                    <div class="row justify-content-between m-3">
+                                        <div class="col-4 d-inline-flex userDate">
+                                            {% if comment.user.image %}
+                                                <img class="rounded-circle" src="{{ comment.user.image.url }}"
+                                                     alt="user_profile">
+                                            {% else %}
+                                                <img class="rounded-circle"
+                                                     src="{% static 'posting/images/Empty.jpg' %}"
+                                                     alt="user_profile">
+                                            {% endif %}
+                                            <div>
+                                                <p class="m-0">{{ comment.user }}</p>
+                                                <p class="m-0 text-muted" id="pubDate">{{ comment.time | timesince }}
+                                                    پیش</p>
+                                            </div>
+                                        </div>
+                                        {% if user.is_authenticated %}
+                                            {% if user|has_group:'ویراستار' or user.is_superuser %}
+                                                <div class="col-4 situation" dir="ltr" post-id="{{ comment.id }}"
+                                                     type-change="comment">
+                                                    {% if comment.activated %}
+                                                        <button class="btn btn-outline-success text-nowrap"
+                                                                button-state="activation"
+                                                                id="{{ forloop.counter }}">
+                                                            فعال
+                                                        </button>
+                                                    {% else %}
+                                                        <button class="btn btn-outline-secondary text-nowrap"
+                                                                button-state="activation"
+                                                                id="{{ forloop.counter }}">
+                                                            غیرفعال
+                                                        </button>
+                                                    {% endif %}
+                                                    {% if comment.permitted %}
+                                                        <button class="btn btn-outline-success text-nowrap"
+                                                                button-state="permitted"
+                                                                id="{{ forloop.counter }}{{ post.id }}">
+                                                            اجازه نمایش دارد
+                                                        </button>
+                                                    {% else %}
+                                                        <button class="btn btn-outline-secondary text-nowrap"
+                                                                button-state="permitted"
+                                                                id="{{ forloop.counter }}{{ post.id }}">
+                                                            اجازه نمایش ندارد
+                                                        </button>
+                                                    {% endif %}
+                                                </div>
+                                            {% endif %}
+                                        {% endif %}
+                                    </div>
                                     <p class="m-3">{{ comment.comment_text }}</p>
                                     {% if user.is_authenticated %}
                                         <div class="d-inline-flex commentLikes">
