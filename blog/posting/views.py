@@ -135,14 +135,14 @@ def postLiking(request):
         typeLike = False
 
     try:
-        postUserLike = PostLikes.objects.get(user=user)
+        postUserLike = PostLikes.objects.get(user=user, post=post)
         postUserLike.delete()
     except Exception as e:
         print('likeError while postLiking: ', e)
         newLike = PostLikes.objects.create(post=post, user=user, type=typeLike)
         newLike.save()
 
-    return JsonResponse({'count': PostLikes.objects.filter(type=typeLike).count(), 'status': typeLike})
+    return JsonResponse({'count': PostLikes.objects.filter(type=typeLike, post=post).count(), 'status': typeLike})
 
 
 @csrf_protect
@@ -157,14 +157,15 @@ def commentLiking(request):
         typeLike = False
 
     try:
-        commentUserLike = CommentLikes.objects.get(user=user)
+        commentUserLike = CommentLikes.objects.get(user=user, comment=comment)
         commentUserLike.delete()
     except Exception as e:
         print('likeError while commentLiking: ', e)
         newLike = CommentLikes.objects.create(comment=comment, user=user, type=typeLike)
         newLike.save()
 
-    return JsonResponse({'count': CommentLikes.objects.filter(type=typeLike).count(), 'status': typeLike})
+    return JsonResponse(
+        {'count': CommentLikes.objects.filter(type=typeLike, comment=comment).count(), 'status': typeLike})
 
 
 def search(request):

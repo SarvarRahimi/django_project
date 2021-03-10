@@ -52,7 +52,7 @@
                         {% if user.is_authenticated %}
                             <div class="d-inline-flex postLikes">
                                 <div class="d-inline-flex">
-                                    <p id="likePost">{{ post.postlikes_set | likeCounter:"True" }}</p>
+                                    <p id="likePost">{{ post.pk | postLikeCounter:"True" }}</p>
                                     <svg id="likeSvg" user-id="{{ user.id }}" post-id="{{ post.id }}"
                                          status="True"
                                          xmlns="http://www.w3.org/2000/svg" width="16" height="16"
@@ -63,7 +63,7 @@
                                     </svg>
                                 </div>
                                 <div class="d-inline-flex">
-                                    <p id="dislikePost">{{ post.postlikes_set | likeCounter:"False" }}</p>
+                                    <p id="dislikePost">{{ post.pk | postLikeCounter:"False" }}</p>
                                     <svg id="dislikeSvg" user-id="{{ user.id }}" post-id="{{ post.id }}"
                                          status="False"
                                          xmlns="http://www.w3.org/2000/svg" width="16" height="16"
@@ -135,7 +135,7 @@
                                     {% if user.is_authenticated %}
                                         <div class="d-inline-flex commentLikes">
                                             <div class="d-inline-flex">
-                                                <p id='likeComment'>{{ comment.commentlikes_set | likeCounter:"True" }}</p>
+                                                <p id='likeComment{{ comment.id }}'>{{ comment.pk | commentLikeCounter:"True" }}</p>
                                                 <svg id="likeSvg" user-id="{{ user.id }}"
                                                      comment-id="{{ comment.id }}"
                                                      xmlns="http://www.w3.org/2000/svg" width="16" height="16"
@@ -146,7 +146,7 @@
                                                 </svg>
                                             </div>
                                             <div class="d-inline-flex">
-                                                <p id='dislikeComment'>{{ comment.commentlikes_set | likeCounter:"False" }}</p>
+                                                <p id='dislikeComment{{ comment.id }}'>{{ comment.pk | commentLikeCounter:"False" }}</p>
                                                 <svg id="dislikeSvg" user-id="{{ user.id }}"
                                                      comment-id="{{ comment.id }}"
                                                      xmlns="http://www.w3.org/2000/svg" width="16" height="16"

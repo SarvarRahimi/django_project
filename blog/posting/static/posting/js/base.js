@@ -19,9 +19,10 @@ $(function () {
     $(".postLikes div svg").on("click", function (event) {
         event.preventDefault();
         const csrf_token = getCookie('csrftoken');
+        let postId = $(this).attr('post-id');
         let data = {
             "user_id": $(this).attr('user-id'),
-            "post_id": $(this).attr('post-id'),
+            "post_id": postId,
             "status": $(this).attr('status'),
             "csrfmiddlewaretoken": csrf_token
         };
@@ -35,9 +36,9 @@ $(function () {
             .done(function (result) {
                 alert("ثبت شد");
                 if (result['status']) {
-                    $('#likePost').html(result['count']);
+                    $('#likePost'+postId).html(result['count']);
                 } else {
-                    $('#dislikePost').html(result['count']);
+                    $('#dislikePost'+postId).html(result['count']);
                 }
             })
             .fail(function (result) {
@@ -48,9 +49,10 @@ $(function () {
     $(".commentLikes div svg").on("click", function (e) {
         e.preventDefault();
         const csrf_token = getCookie('csrftoken');
+        let commentId = $(this).attr('comment-id');
         let data = {
             "user_id": $(this).attr('user-id'),
-            "comment_id": $(this).attr('comment-id'),
+            "comment_id": commentId,
             "status": $(this).attr('status'),
             "csrfmiddlewaretoken": csrf_token
         };
@@ -64,9 +66,9 @@ $(function () {
             .done(function (result) {
                 alert("ثبت شد");
                 if (result['status']) {
-                    $('#likeComment').html(result['count']);
+                    $('#likeComment'+commentId).html(result['count']);
                 } else {
-                    $('#dislikeComment').html(result['count']);
+                    $('#dislikeComment'+commentId).html(result['count']);
                 }
             })
             .fail(function (result) {
