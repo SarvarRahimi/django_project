@@ -18,8 +18,8 @@ function getCookie(name) {
 $(function () {
     $(".situation button").on("click", function (event) {
         event.preventDefault();
-        let postId = $(".situation").attr('post-id');
-        let typeChange = $(".situation").attr('type-change');
+        let postId = $(this).closest('.situation').attr('post-id');
+        let typeChange = $(this).closest('.situation').attr('type-change');
         let buttonId = $(this).attr('id');
         let buttonState = $(this).attr('button-state');
         const csrf_token = getCookie('csrftoken');
