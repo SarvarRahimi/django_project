@@ -112,8 +112,10 @@ def createPosts(request):
 def createComment(request, post_id):
     if request.POST:
         data = request.POST
-        user = get_object_or_404(BlogUser, pk=request.user.id - 1)
-        print(user)
+        if not request.user.is_superuser:
+            user = get_object_or_404(BlogUser, pk=request.user.id - 1)
+        else:
+            user = get_object_or_404(BlogUser, pk=request.user.id)
         post = get_object_or_404(Post, pk=post_id)
         newComment = Comment.objects.create(user=user, post=post, comment_text=data['comment'])
         newComment.save()
@@ -131,7 +133,6 @@ def postLiking(request):
         user = get_object_or_404(BlogUser, pk=request.user.id - 1)
     else:
         user = get_object_or_404(BlogUser, pk=request.user.id)
-    print(user)
     post = get_object_or_404(Post, pk=data['post_id'])
 
     if data['status'] == 'True':
@@ -153,8 +154,10 @@ def postLiking(request):
 @csrf_protect
 def commentLiking(request):
     data = request.POST
-    user = get_object_or_404(BlogUser, pk=request.user.id - 1)
-    print(user)
+    if not request.user.is_superuser:
+        user = get_object_or_404(BlogUser, pk=request.user.id - 1)
+    else:
+        user = get_object_or_404(BlogUser, pk=request.user.id)
     comment = get_object_or_404(Comment, pk=data['comment_id'])
 
     if data['status'] == 'True':
