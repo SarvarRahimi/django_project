@@ -112,7 +112,7 @@ def createPosts(request):
 def createComment(request, post_id):
     if request.POST:
         data = request.POST
-        user = get_object_or_404(BlogUser, pk=request.user.id-1)
+        user = get_object_or_404(BlogUser, pk=request.user.id - 1)
         print(user)
         post = get_object_or_404(Post, pk=post_id)
         newComment = Comment.objects.create(user=user, post=post, comment_text=data['comment'])
@@ -128,7 +128,7 @@ def postLiking(request):
     # PostLikes.objects.all().delete()
     data = request.POST
     if not request.user.is_superuser:
-        user = get_object_or_404(BlogUser, pk=request.user.id-1)
+        user = get_object_or_404(BlogUser, pk=request.user.id - 1)
     else:
         user = get_object_or_404(BlogUser, pk=request.user.id)
     print(user)
@@ -153,7 +153,7 @@ def postLiking(request):
 @csrf_protect
 def commentLiking(request):
     data = request.POST
-    user = get_object_or_404(BlogUser, pk=request.user.id-1)
+    user = get_object_or_404(BlogUser, pk=request.user.id - 1)
     print(user)
     comment = get_object_or_404(Comment, pk=data['comment_id'])
 
@@ -176,40 +176,22 @@ def commentLiking(request):
 
 def search(request):
     if request.POST:
-        if request.POST['searchInput']:
+        if request.POST.get('typeSearch') == 'simple':
             inputValue = request.POST['searchInput']
             posts = Post.objects.filter(
                 Q(head__iregex=inputValue) | Q(body__iregex=inputValue) | Q(summary__iregex=inputValue) | Q(
                     label__label_text__iregex=inputValue) | Q(category__category_text__iregex=inputValue) | Q(
                     author__user__username__iregex=inputValue) | Q(
-                    author__user__first_name__iregex=inputValue)).distinct()
+                    author__user__first_name__iregex=inputValue), activated=True, permitted=True).distinct()
             return render(request, 'posting/showPosts.html', {'posts': posts, 'user': request.user})
 
-        elif request.POST['authorBox'] or request.POST['headBox'] or request.POST['bodyBox'] or \
-                request.POST['labelBox']:
+        elif request.POST.get('typeSearch') == 'advance':
             posts = Post.objects.filter(
-                Q(head__iregex=request.POST['headBox']) | Q(body__iregex=request.POST['bodyBox']) | Q(
-                    label__label_text__iregex=request.POST['labelBox']) | Q(
-                    author__user__username__iregex=request.POST['authorBox']) | Q(
-                    author__user__first_name__iregex=request.POST['authorBox'])).distinct()
-            return render(request, 'posting/showPosts.html', {'posts': posts, 'user': request.user})
-
-        else:
-            all_posts = Post.objects.all().filter(activated=True, permitted=True).order_by('-time')
-            return render(request, 'posting/showPosts.html', {'posts': all_posts, 'user': request.user})
-    else:
-        raise Http404
-
-
-def advancedSearch(request):
-    if request.POST:
-        if request.POST['authorBox'] or request.POST['headBox'] or request.POST['bodyBox'] or \
-                request.POST['labelBox']:
-            posts = Post.objects.filter(
-                Q(head__iregex=request.POST['headBox']) | Q(body__iregex=request.POST['bodyBox']) | Q(
-                    label__label_text__iregex=request.POST['labelBox']) | Q(
-                    author__user__username__iregex=request.POST['authorBox']) | Q(
-                    author__user__first_name__iregex=request.POST['authorBox'])).distinct()
+                head__iregex=request.POST['headBox'], body__iregex=request.POST['bodyBox'],
+                label__label_text__iregex=request.POST['labelBox'],
+                author__user__username__iregex=request.POST['authorBox'],
+                author__user__first_name__iregex=request.POST[
+                    'authorBox'], activated=True, permitted=True).distinct()
             return render(request, 'posting/showPosts.html', {'posts': posts, 'user': request.user})
 
         else:
